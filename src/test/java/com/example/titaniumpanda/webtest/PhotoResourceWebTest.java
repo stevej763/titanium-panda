@@ -13,9 +13,9 @@ public class PhotoResourceWebTest extends AbstractWebTest {
 
     @Test
     public void shouldReturnSerializedPhotoDto() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/api/photo", String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/api/photo/1", String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
-        assertThat(responseEntity.getBody(), is("{\"title\":\"photo title\"}"));
+        assertThat(responseEntity.getBody(), is("{\"title\":\"photo title\",\"photoId\":\"1\"}"));
     }
 
 }

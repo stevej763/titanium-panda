@@ -1,23 +1,28 @@
 package com.example.titaniumpanda.api.photos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-@JsonRootName("photoDto")
 public class PhotoDto {
 
 
-    private String title;
+    private final String title;
+    private final String photoId;
 
-    public PhotoDto(@JsonProperty("title") String title) {
+    public PhotoDto(@JsonProperty("title") String title,
+                    @JsonProperty("photoId") String photoId) {
         this.title = title;
+        this.photoId = photoId;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public String getPhotoId() {
+        return photoId;
     }
 
     @Override

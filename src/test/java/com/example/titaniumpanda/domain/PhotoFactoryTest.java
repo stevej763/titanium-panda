@@ -13,8 +13,8 @@ public class PhotoFactoryTest {
     @Test
     public void shouldConvertToDto() {
         PhotoFactory underTest = new PhotoFactory();
-        Photo photo = new Photo("title", "id");
-        PhotoDto expected = new PhotoDto("title", "id");
+        Photo photo = new Photo("title", "id", "photoUrl", "description");
+        PhotoDto expected = new PhotoDto("title", "id", "photoUrl", "description");
         assertThat(underTest.convertToDto(photo), is(expected));
     }
 

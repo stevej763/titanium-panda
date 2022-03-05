@@ -9,11 +9,17 @@ public class PhotoDto {
 
     private final String title;
     private final String photoId;
+    private String photoUrl;
+    private String description;
 
     public PhotoDto(@JsonProperty("title") String title,
-                    @JsonProperty("photoId") String photoId) {
+                    @JsonProperty("photoId") String photoId,
+                    @JsonProperty("photoUrl") String photoUrl,
+                    @JsonProperty("description") String description) {
         this.title = title;
         this.photoId = photoId;
+        this.photoUrl = photoUrl;
+        this.description = description;
     }
 
     public String getTitle() {
@@ -22,6 +28,14 @@ public class PhotoDto {
 
     public String getPhotoId() {
         return photoId;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override

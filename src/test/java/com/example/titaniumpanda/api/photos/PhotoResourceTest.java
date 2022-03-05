@@ -20,7 +20,7 @@ public class PhotoResourceTest {
     @Test
     public void shouldReturnPhoto() {
         String id = UUID.randomUUID().toString();
-        PhotoDto photoDto = new PhotoDto("photo title", id);
+        PhotoDto photoDto = new PhotoDto("photo title", id, "photoUrl", "description");
         when(photoService.findPhotoBy(id)).thenReturn(Optional.of(photoDto));
         assertThat(underTest.getPhoto(id).getBody(), is(photoDto));
     }

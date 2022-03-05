@@ -8,10 +8,14 @@ public class Photo {
 
     private final String title;
     private final String photoId;
+    private final String photoThumbnailUrl;
+    private final String photoDescription;
 
-    public Photo(String title, String photoId) {
+    public Photo(String title, String photoId, String photoThumbnailUrl, String photoDescription) {
         this.title = title;
         this.photoId = photoId;
+        this.photoThumbnailUrl = photoThumbnailUrl;
+        this.photoDescription = photoDescription;
     }
 
     public String getTitle() {
@@ -20,6 +24,14 @@ public class Photo {
 
     public String getPhotoId() {
         return photoId;
+    }
+
+    public String getPhotoThumbnailUrl() {
+        return photoThumbnailUrl;
+    }
+
+    public String getPhotoDescription() {
+        return photoDescription;
     }
 
     @Override

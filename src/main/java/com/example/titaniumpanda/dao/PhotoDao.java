@@ -10,9 +10,9 @@ import java.util.Set;
 public class PhotoDao {
 
     private final Set<Photo> fakeDb = Set.of(
-            new Photo("photo title", "1"),
-            new Photo("photo title", "2"),
-            new Photo("photo title", "3"));
+            new Photo("photo title", "1", "photoUrl", "description"),
+            new Photo("photo title", "2", "photoUrl", "description"),
+            new Photo("photo title", "3", "photoUrl", "description"));
 
     public Set<Photo> findAll() {
         return fakeDb;

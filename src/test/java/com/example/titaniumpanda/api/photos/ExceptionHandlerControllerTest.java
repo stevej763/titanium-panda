@@ -1,10 +1,10 @@
 package com.example.titaniumpanda.api.photos;
 
-import org.hamcrest.core.Is;
+import com.example.titaniumpanda.api.fourzerofour.ExceptionHandlerController;
+import com.example.titaniumpanda.api.fourzerofour.ResourceErrorMessage;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 
-import static com.example.titaniumpanda.api.photos.ResourceErrorMessage.RESOURCE_NOT_FOUND;
+import static com.example.titaniumpanda.api.fourzerofour.ResourceErrorMessage.RESOURCE_NOT_FOUND;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.http.HttpStatus.NOT_FOUND;

@@ -1,17 +1,15 @@
-package com.example.titaniumpanda.api.photos;
+package com.example.titaniumpanda.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class PhotoDto {
+public class Photo {
 
     private final String title;
     private final String photoId;
 
-    public PhotoDto(@JsonProperty("title") String title,
-                    @JsonProperty("photoId") String photoId) {
+    public Photo(String title, String photoId) {
         this.title = title;
         this.photoId = photoId;
     }

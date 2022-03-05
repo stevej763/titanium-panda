@@ -18,4 +18,16 @@ public class PhotoResourceWebTest extends AbstractWebTest {
         assertThat(responseEntity.getBody(), is("{\"title\":\"photo title\",\"photoId\":\"1\"}"));
     }
 
+    @Test
+    public void shouldReturnMultipleSerializedPhotoDtos() {
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/api/photo/all", String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(responseEntity.getBody(),
+                is("[{\"title\":\"photo title\",\"photoId\":\"1\"}" +
+                        ",{\"title\":\"photo title\",\"photoId\":\"2\"}," +
+                        "{\"title\":\"photo title\",\"photoId\":\"3\"}" +
+                        "]"
+                ));
+    }
+
 }

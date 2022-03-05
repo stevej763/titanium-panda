@@ -1,27 +1,70 @@
 package com.example.titaniumpanda.domain;
 
 import com.example.titaniumpanda.api.photos.PhotoDto;
+import com.example.titaniumpanda.dao.PhotoDao;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import java.util.Optional;
+import java.util.Set;
 
+import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PhotoServiceTest {
 
+    private final PhotoFactory photoFactory = mock(PhotoFactory.class);
+    private final PhotoDao photoDao = mock(PhotoDao.class);
+
+    private final PhotoService underTest = new PhotoService(photoFactory, photoDao);
+    private final String photoId = "100";
+
     @Test
     public void shouldReturnPhotoDto() {
-        String id = "1";
-        PhotoDto photoDto = new PhotoDto("photo title", id);
-        PhotoService underTest = new PhotoService();
-        assertThat(underTest.findPhotoBy(id), is(Optional.of(photoDto)));
+        PhotoDto photoDto = new PhotoDto("photo title", photoId);
+        Photo photo = new Photo("title", "id");
+        when(photoDao.findById(photoId)).thenReturn(Optional.of(photo));
+        when(photoFactory.convertToDto(photo)).thenReturn(photoDto);
+        assertThat(underTest.findPhotoBy(photoId), is(Optional.of(photoDto)));
     }
-
 
     @Test
     public void shouldReturnOptionalEmptyIfIdNotFound() {
-        String id = "100";
-        PhotoService underTest = new PhotoService();
-        assertThat(underTest.findPhotoBy(id), is(Optional.empty()));
+        when(photoDao.findById(photoId)).thenReturn(Optional.empty());
+        assertThat(underTest.findPhotoBy(photoId), is(Optional.empty()));
+    }
+
+    @Test
+    public void shouldReturnSetOfPhotoDtoObjects() {
+        Photo photo1 = new Photo("photo title", "1");
+        Photo photo2 = new Photo("photo title", "2");
+        Photo photo3 = new Photo("photo title", "3");
+        Set<Photo> photos = Set.of(
+                photo1,
+                photo2,
+                photo3
+        );
+        PhotoDto photoDto1 = new PhotoDto("photo title", "1");
+        PhotoDto photoDto2 = new PhotoDto("photo title", "2");
+        PhotoDto photoDto3 = new PhotoDto("photo title", "3");
+        Set<PhotoDto> photoDtos = Set.of(
+                photoDto1,
+                photoDto2,
+                photoDto3
+        );
+
+        when(photoDao.findAll()).thenReturn(photos);
+        when(photoFactory.convertToDto(photo1)).thenReturn(photoDto1);
+        when(photoFactory.convertToDto(photo2)).thenReturn(photoDto2);
+        when(photoFactory.convertToDto(photo3)).thenReturn(photoDto3);
+
+        assertThat(underTest.findAllPhotos(), is(photoDtos));
+    }
+
+    @Test
+    public void shouldReturnEmptySetIfNoPhotosFound() {
+        assertThat(underTest.findAllPhotos(), is(emptySet()));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.titaniumpanda.api.photos;
+package com.example.titaniumpanda.api.fourzerofour;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

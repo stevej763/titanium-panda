@@ -1,4 +1,4 @@
-package com.example.titaniumpanda.api.photos;
+package com.example.titaniumpanda.api.fourzerofour;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;

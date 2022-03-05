@@ -2,16 +2,16 @@ package com.example.titaniumpanda.api.photos;
 
 import com.example.titaniumpanda.domain.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.http.MediaType.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("api/photo")
 public class PhotoResource {
 
     @Autowired
@@ -21,7 +21,7 @@ public class PhotoResource {
         this.photoService = photoService;
     }
 
-    @GetMapping(value = "/photo/{id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<PhotoDto> getPhoto(@PathVariable("id") String id) {
         Optional<PhotoDto> photoDto = photoService.findPhotoBy(id);
         if (photoDto.isPresent()) {
@@ -29,5 +29,12 @@ public class PhotoResource {
         } else {
             return ResponseEntity.noContent().build();
         }
+    }
+
+    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<PhotoDto>> getAllPhotos() {
+        Set<PhotoDto> photos = photoService.findAllPhotos();
+        return ResponseEntity.ok().body(photos);
+
     }
 }

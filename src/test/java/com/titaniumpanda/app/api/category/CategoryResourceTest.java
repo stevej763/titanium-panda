@@ -4,8 +4,10 @@ import com.titaniumpanda.app.domain.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
@@ -37,5 +39,28 @@ public class CategoryResourceTest {
 
         assertThat(result.hasBody(), is(false));
         assertThat(result.getStatusCode(), is(NO_CONTENT));
+    }
+
+    @Test
+    public void shouldReturnListOfCatergories() {
+        List<CategoryDto> categoryDtos = List.of(
+                new CategoryDto("1", "title", "thumbnailUrl", "description"),
+                new CategoryDto("2", "title", "thumbnailUrl", "description"),
+                new CategoryDto("3", "title", "thumbnailUrl", "description"));
+
+        when(categoryService.findAll()).thenReturn(categoryDtos);
+
+        ResponseEntity<List<CategoryDto>> result = underTest.getAllCategories();
+
+        assertThat(result.getBody(), is(categoryDtos));
+    }
+
+    @Test
+    public void shouldReturnEmptyList() {
+        when(categoryService.findAll()).thenReturn(emptyList());
+
+        ResponseEntity<List<CategoryDto>> result = underTest.getAllCategories();
+
+        assertThat(result.getBody(), is(emptyList()));
     }
 }

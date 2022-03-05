@@ -36,7 +36,7 @@ public class PhotoResource {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PhotoDto>> getAllPhotos() {
-        List<PhotoDto> photos = photoService.findAllPhotos();
+        List<PhotoDto> photos = photoService.findAll();
         return ResponseEntity.ok().body(photos);
     }
 }

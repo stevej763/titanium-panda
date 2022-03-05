@@ -1,11 +1,11 @@
 package com.titaniumpanda.app.domain;
 
-import com.titaniumpanda.app.api.photos.PhotoDto;
+import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.dao.PhotoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PhotoService {
@@ -23,7 +23,7 @@ public class PhotoService {
        return photoDao.findById(id).map(photoFactory::convertToDto);
     }
 
-    public Set<PhotoDto> findAllPhotos() {
-        return photoDao.findAll().stream().map(photoFactory::convertToDto).collect(Collectors.toSet());
+    public List<PhotoDto> findAllPhotos() {
+        return photoDao.findAll().stream().map(photoFactory::convertToDto).collect(Collectors.toList());
     }
 }

@@ -23,8 +23,8 @@ public class PhotoResourceWebTest extends AbstractWebTest {
         assertThat(responseEntity.getBody(),
                 is("[" +
                         "{\"title\":\"photo title\",\"photoId\":\"1\",\"photoUrl\":\"photoUrl\",\"description\":\"description\"}," +
-                        "{\"title\":\"photo title\",\"photoId\":\"3\",\"photoUrl\":\"photoUrl\",\"description\":\"description\"}," +
-                        "{\"title\":\"photo title\",\"photoId\":\"2\",\"photoUrl\":\"photoUrl\",\"description\":\"description\"}]"
+                        "{\"title\":\"photo title\",\"photoId\":\"2\",\"photoUrl\":\"photoUrl\",\"description\":\"description\"}," +
+                        "{\"title\":\"photo title\",\"photoId\":\"3\",\"photoUrl\":\"photoUrl\",\"description\":\"description\"}]"
                 ));
     }
 

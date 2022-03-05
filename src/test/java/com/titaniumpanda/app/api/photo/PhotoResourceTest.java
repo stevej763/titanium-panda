@@ -1,6 +1,5 @@
 package com.titaniumpanda.app.api.photo;
 
-import com.titaniumpanda.app.api.category.CategoryDto;
 import com.titaniumpanda.app.domain.PhotoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package com.titaniumpanda.app.domain;
 
-import com.titaniumpanda.app.api.photos.PhotoDto;
+import com.titaniumpanda.app.api.photo.PhotoDto;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

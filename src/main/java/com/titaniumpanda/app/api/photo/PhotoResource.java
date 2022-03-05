@@ -1,14 +1,17 @@
-package com.titaniumpanda.app.api.photos;
+package com.titaniumpanda.app.api.photo;
 
 import com.titaniumpanda.app.domain.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import static org.springframework.http.MediaType.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("api/photo")
@@ -32,9 +35,8 @@ public class PhotoResource {
     }
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<PhotoDto>> getAllPhotos() {
-        Set<PhotoDto> photos = photoService.findAllPhotos();
+    public ResponseEntity<List<PhotoDto>> getAllPhotos() {
+        List<PhotoDto> photos = photoService.findAllPhotos();
         return ResponseEntity.ok().body(photos);
-
     }
 }

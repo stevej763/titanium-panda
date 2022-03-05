@@ -1,4 +1,4 @@
-package com.titaniumpanda.app.api.photos;
+package com.titaniumpanda.app.api.photo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -9,8 +9,8 @@ public class PhotoDto {
 
     private final String title;
     private final String photoId;
-    private String photoUrl;
-    private String description;
+    private final String photoUrl;
+    private final String description;
 
     public PhotoDto(@JsonProperty("title") String title,
                     @JsonProperty("photoId") String photoId,

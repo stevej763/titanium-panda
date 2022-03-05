@@ -1,4 +1,4 @@
-package com.titaniumpanda.app.api.fourzerofour;
+package com.titaniumpanda.app.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

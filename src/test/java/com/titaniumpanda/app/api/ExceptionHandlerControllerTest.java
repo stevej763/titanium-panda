@@ -1,7 +1,5 @@
-package com.titaniumpanda.app.api.photos;
+package com.titaniumpanda.app.api;
 
-import com.titaniumpanda.app.api.fourzerofour.ExceptionHandlerController;
-import com.titaniumpanda.app.api.fourzerofour.ResourceErrorMessage;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

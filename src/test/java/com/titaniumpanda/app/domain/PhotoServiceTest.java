@@ -1,12 +1,13 @@
 package com.titaniumpanda.app.domain;
 
-import com.titaniumpanda.app.api.photos.PhotoDto;
+import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.dao.PhotoDao;
 import org.junit.jupiter.api.Test;
-import java.util.Optional;
-import java.util.Set;
 
-import static java.util.Collections.emptySet;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
@@ -40,7 +41,7 @@ public class PhotoServiceTest {
         Photo photo1 = new Photo("photo title", "1", "photoUrl", "description");
         Photo photo2 = new Photo("photo title", "2", "photoUrl", "description");
         Photo photo3 = new Photo("photo title", "3", "photoUrl", "description");
-        Set<Photo> photos = Set.of(
+        List<Photo> photos = List.of(
                 photo1,
                 photo2,
                 photo3
@@ -48,7 +49,7 @@ public class PhotoServiceTest {
         PhotoDto photoDto1 = new PhotoDto("photo title", "1", "photoUrl", "description");
         PhotoDto photoDto2 = new PhotoDto("photo title", "2", "photoUrl", "description");
         PhotoDto photoDto3 = new PhotoDto("photo title", "3", "photoUrl", "description");
-        Set<PhotoDto> photoDtos = Set.of(
+        List<PhotoDto> photoDtos = List.of(
                 photoDto1,
                 photoDto2,
                 photoDto3
@@ -63,7 +64,7 @@ public class PhotoServiceTest {
     }
 
     @Test
-    public void shouldReturnEmptySetIfNoPhotosFound() {
-        assertThat(underTest.findAllPhotos(), is(emptySet()));
+    public void shouldReturnEmptyListIfNoPhotosFound() {
+        assertThat(underTest.findAllPhotos(), is(emptyList()));
     }
 }

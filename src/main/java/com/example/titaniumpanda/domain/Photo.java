@@ -1,25 +1,21 @@
-package com.example.titaniumpanda.api.photos;
+package com.example.titaniumpanda.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class PhotoDto {
+public class Photo {
 
     private final String title;
     private final String photoId;
-    private String photoUrl;
-    private String description;
+    private final String photoThumbnailUrl;
+    private final String photoDescription;
 
-    public PhotoDto(@JsonProperty("title") String title,
-                    @JsonProperty("photoId") String photoId,
-                    @JsonProperty("photoUrl") String photoUrl,
-                    @JsonProperty("description") String description) {
+    public Photo(String title, String photoId, String photoThumbnailUrl, String photoDescription) {
         this.title = title;
         this.photoId = photoId;
-        this.photoUrl = photoUrl;
-        this.description = description;
+        this.photoThumbnailUrl = photoThumbnailUrl;
+        this.photoDescription = photoDescription;
     }
 
     public String getTitle() {
@@ -30,12 +26,12 @@ public class PhotoDto {
         return photoId;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getPhotoThumbnailUrl() {
+        return photoThumbnailUrl;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPhotoDescription() {
+        return photoDescription;
     }
 
     @Override

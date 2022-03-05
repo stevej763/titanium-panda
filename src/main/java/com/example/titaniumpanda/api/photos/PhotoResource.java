@@ -1,18 +1,40 @@
 package com.example.titaniumpanda.api.photos;
 
-import jdk.jfr.ContentType;
+import com.example.titaniumpanda.domain.PhotoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.Set;
+
+import static org.springframework.http.MediaType.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("api/photo")
 public class PhotoResource {
 
-    @GetMapping("/photo")
-    public ResponseEntity<PhotoDto> getPhoto() {
-        return ResponseEntity.ok().body(new PhotoDto("photo title"));
+    @Autowired
+    private final PhotoService photoService;
+
+    public PhotoResource(PhotoService photoService) {
+        this.photoService = photoService;
+    }
+
+    @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<PhotoDto> getPhoto(@PathVariable("id") String id) {
+        Optional<PhotoDto> photoDto = photoService.findPhotoBy(id);
+        if (photoDto.isPresent()) {
+            return ResponseEntity.ok().body(photoDto.get());
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<PhotoDto>> getAllPhotos() {
+        Set<PhotoDto> photos = photoService.findAllPhotos();
+        return ResponseEntity.ok().body(photos);
+
     }
 }

@@ -23,7 +23,7 @@ public class PhotoService {
        return photoDao.findById(id).map(photoFactory::convertToDto);
     }
 
-    public List<PhotoDto> findAllPhotos() {
+    public List<PhotoDto> findAll() {
         return photoDao.findAll().stream().map(photoFactory::convertToDto).collect(Collectors.toList());
     }
 }

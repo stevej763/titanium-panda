@@ -60,11 +60,11 @@ public class PhotoServiceTest {
         when(photoFactory.convertToDto(photo2)).thenReturn(photoDto2);
         when(photoFactory.convertToDto(photo3)).thenReturn(photoDto3);
 
-        assertThat(underTest.findAllPhotos(), is(photoDtos));
+        assertThat(underTest.findAll(), is(photoDtos));
     }
 
     @Test
     public void shouldReturnEmptyListIfNoPhotosFound() {
-        assertThat(underTest.findAllPhotos(), is(emptyList()));
+        assertThat(underTest.findAll(), is(emptyList()));
     }
 }

@@ -11,7 +11,8 @@ public class CategoryResourceWebTest extends AbstractWebTest {
 
     @Test
     public void shouldReturnSerializedCategory() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/api/category/1", String.class);
+        String url = localhostWithPort + "/api/category/1";
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(responseEntity.getBody(), is("{" +
                 "\"categoryId\":\"1\"," +
@@ -23,7 +24,8 @@ public class CategoryResourceWebTest extends AbstractWebTest {
 
     @Test
     public void shouldReturnMultipleSerializedPhotoDtos() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/api/category/all", String.class);
+        String url = localhostWithPort + "/api/category/all";
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(responseEntity.getBody(),
                 is("[" +

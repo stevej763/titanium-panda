@@ -8,8 +8,11 @@ import org.springframework.boot.web.server.LocalServerPort;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractWebTest {
 
+
     @LocalServerPort
     protected int port;
+
+    protected final String localhostWithPort = "http://localhost" + port;
 
     @Autowired
     protected TestRestTemplate restTemplate;

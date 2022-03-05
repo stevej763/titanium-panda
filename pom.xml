@@ -8,10 +8,10 @@
 		<version>2.6.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>titanium-panda</artifactId>
+	<groupId>com.titanium-panda</groupId>
+	<artifactId>titanium-panda-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>titanium-panda</name>
+	<name>titanium-panda-app</name>
 	<description>photo portfolio api</description>
 	<properties>
 		<java.version>11</java.version>

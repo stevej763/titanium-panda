@@ -6,11 +6,16 @@ import com.titaniumpanda.app.domain.CategoryFactory;
 import com.titaniumpanda.app.domain.CategoryService;
 import com.titaniumpanda.app.domain.PhotoFactory;
 import com.titaniumpanda.app.domain.PhotoService;
+import com.titaniumpanda.app.repository.PhotoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ApplicationResourceConfiguration {
+
+    @Autowired
+    PhotoRepository photoRepository;
 
     @Bean
     public PhotoService photoService() {
@@ -29,7 +34,7 @@ public class ApplicationResourceConfiguration {
 
     @Bean
     public PhotoDao photoDao() {
-        return new PhotoDao();
+        return new PhotoDao(photoRepository);
     }
 
     @Bean

@@ -1,28 +1,19 @@
-package com.titaniumpanda.app.webtest;
+package com.titaniumpanda.app.repository;
 
 import com.mongodb.client.MongoClients;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.TestPropertySource;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DataMongoTest
 @TestPropertySource(locations = "classpath:test.properties")
-public abstract class AbstractWebTest {
+abstract public class AbstractMongoRepositoryTest {
 
     protected static String testDatabaseName = "test";
     protected static String collectionName ="photo";
     protected static MongoTemplate mongoTemplate;
-
-    @LocalServerPort
-    protected int port;
-
-    @Autowired
-    protected TestRestTemplate restTemplate;
 
     @BeforeEach
     void setUp() {

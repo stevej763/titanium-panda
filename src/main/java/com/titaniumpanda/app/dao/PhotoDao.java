@@ -1,22 +1,28 @@
 package com.titaniumpanda.app.dao;
 
 import com.titaniumpanda.app.domain.Photo;
+import com.titaniumpanda.app.repository.PhotoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
 
 public class PhotoDao {
 
-    private final List<Photo> fakeDb = List.of(
-            new Photo("photo title", "1", "photoUrl", "description"),
-            new Photo("photo title", "2", "photoUrl", "description"),
-            new Photo("photo title", "3", "photoUrl", "description"));
+    @Autowired
+    PhotoRepository photoRepository;
+
+    public PhotoDao(PhotoRepository photoRepository) {
+        this.photoRepository = photoRepository;
+    }
 
     public List<Photo> findAll() {
-        return fakeDb;
+        System.out.println("in photo DAO");
+        return photoRepository.findAll();
     }
 
     public Optional<Photo> findById(String id) {
-        return fakeDb.stream().filter(photo -> photo.getPhotoId().equals(id)).findFirst();
+        System.out.println("in photo DAO");
+        return photoRepository.findByPhotoId(id);
     }
 }

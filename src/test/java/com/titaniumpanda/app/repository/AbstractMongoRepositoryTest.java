@@ -17,7 +17,7 @@ abstract public class AbstractMongoRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        mongoTemplate = new MongoTemplate(MongoClients.create("mongodb://localhost:27018"), testDatabaseName);
+        mongoTemplate = new MongoTemplate(MongoClients.create("mongodb://f8940c41ec8e:27018"), testDatabaseName);
     }
 
     @AfterEach

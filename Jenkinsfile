@@ -9,12 +9,12 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'mvn clean package -DskipTests=true'
+                sh 'mvn clean package -DskipTests=true -Dspring.profiles.active=jenkins'
             }
         }
         stage('Test') {
                     steps {
-                        sh 'mvn test'
+                        sh 'mvn test -Dspring.profiles.active=jenkins'
                     }
                     post {
                         always {

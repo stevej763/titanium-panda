@@ -27,6 +27,8 @@ pipeline {
         stage('merge') {
             steps {
                     withCredentials([usernamePassword(credentialsId: 'jenkins-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh('git config --global user.email "${GIT_USERNAME}@ci.com"')
+                        sh('git config --global user.name "${GIT_USERNAME}"')
                         sh("git tag -a some_tag -m 'Jenkins'")
                         sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${GIT_URL} --tags')
                     }

@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    environment {
+            GITHUB_CREDS = credentials('jenkins-ci')
+        }
     tools {
             maven "Maven"
         }
@@ -22,5 +24,13 @@ pipeline {
                         }
                     }
                 }
+        stage('merge') {
+            steps {
+                    withCredentials([usernamePassword(credentialsId: 'jenkins-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh("git tag -a some_tag -m 'Jenkins'")
+                        sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${GIT_URL} --tags')
+                    }
+                }
+            }
     }
 }

@@ -13,8 +13,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractWebTest {
 
-    protected static String testDatabaseName = "test";
-    protected static String collectionName ="photo";
+    protected static final String testDatabaseName = "test";
+
+    protected static String collectionName = "test";
     protected static MongoTemplate mongoTemplate;
 
     @LocalServerPort

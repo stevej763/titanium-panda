@@ -32,7 +32,7 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldReturnOptionalEmptyIfIdNotFound() {
-        when(photoRepository.findById(photoId)).thenReturn(Optional.empty());
+        when(photoRepository.findByPhotoId(photoId)).thenReturn(Optional.empty());
         assertThat(underTest.findPhotoBy(photoId), is(Optional.empty()));
     }
 

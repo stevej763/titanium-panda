@@ -1,7 +1,7 @@
 package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.category.CategoryDto;
-import com.titaniumpanda.app.dao.CategoryDao;
+import com.titaniumpanda.app.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,9 +15,9 @@ import static org.mockito.Mockito.when;
 
 public class CategoryServiceTest {
 
-    private final CategoryDao categoryDao = mock(CategoryDao.class);
+    private final CategoryRepository categoryRepository = mock(CategoryRepository.class);
     private final CategoryFactory categoryFactory = mock(CategoryFactory.class);
-    private final CategoryService underTest = new CategoryService(categoryDao, categoryFactory);
+    private final CategoryService underTest = new CategoryService(categoryRepository, categoryFactory);
     private final String categoryId = "1";
 
     @Test
@@ -25,7 +25,7 @@ public class CategoryServiceTest {
         CategoryDto categoryDto = new CategoryDto("id", "title", "thumbnailUrl", "description");
         Category category = new Category("id", "title", "thumbnailUrl", "description");
 
-        when(categoryDao.findById(categoryId)).thenReturn(Optional.of(category));
+        when(categoryRepository.findByCategoryId(categoryId)).thenReturn(Optional.of(category));
         when(categoryFactory.convertToDto(category)).thenReturn(categoryDto);
 
         Optional<CategoryDto> result = underTest.findBy(categoryId);
@@ -35,7 +35,7 @@ public class CategoryServiceTest {
 
     @Test
     public void shouldReturnOptionalEmptyIfIdNotFound() {
-        when(categoryDao.findById(categoryId)).thenReturn(Optional.empty());
+        when(categoryRepository.findByCategoryId(categoryId)).thenReturn(Optional.empty());
         assertThat(underTest.findBy(categoryId), is(Optional.empty()));
     }
 
@@ -59,7 +59,7 @@ public class CategoryServiceTest {
                 categoryDto3
         );
 
-        when(categoryDao.findAll()).thenReturn(categories);
+        when(categoryRepository.findAll()).thenReturn(categories);
         when(categoryFactory.convertToDto(category1)).thenReturn(categoryDto1);
         when(categoryFactory.convertToDto(category2)).thenReturn(categoryDto2);
         when(categoryFactory.convertToDto(category3)).thenReturn(categoryDto3);

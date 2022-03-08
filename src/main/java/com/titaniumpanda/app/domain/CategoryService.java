@@ -1,29 +1,30 @@
 package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.category.CategoryDto;
-import com.titaniumpanda.app.dao.CategoryDao;
+import com.titaniumpanda.app.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class CategoryService {
 
     @Autowired
-    CategoryDao categoryDao;
+    CategoryRepository categoryRepository;
     CategoryFactory categoryFactory;
 
-    public CategoryService(CategoryDao categoryDao, CategoryFactory categoryFactory) {
-        this.categoryDao = categoryDao;
+    public CategoryService(CategoryRepository categoryRepository, CategoryFactory categoryFactory) {
+        this.categoryRepository = categoryRepository;
         this.categoryFactory = categoryFactory;
     }
 
     public Optional<CategoryDto> findBy(String id) {
-        return categoryDao.findById(id).map(categoryFactory::convertToDto);
+        return categoryRepository.findByCategoryId(id).map(categoryFactory::convertToDto);
     }
 
     public List<CategoryDto> findAll() {
-        return categoryDao.findAll().stream().map(categoryFactory::convertToDto).collect(Collectors.toList());
+        return categoryRepository.findAll().stream().map(categoryFactory::convertToDto).collect(toList());
     }
 }

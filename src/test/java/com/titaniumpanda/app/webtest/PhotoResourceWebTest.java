@@ -1,6 +1,7 @@
 package com.titaniumpanda.app.webtest;
 
 import com.titaniumpanda.app.domain.Photo;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,11 @@ import static org.hamcrest.core.Is.is;
 public class PhotoResourceWebTest extends AbstractWebTest {
 
     private String localhostWithPort;
+
+    @BeforeAll
+    static void beforeAll() {
+        collectionName = "photo";
+    }
 
     @BeforeEach
     @Override

@@ -1,10 +1,10 @@
 package com.titaniumpanda.app;
 
-import com.titaniumpanda.app.dao.CategoryDao;
 import com.titaniumpanda.app.domain.CategoryFactory;
 import com.titaniumpanda.app.domain.CategoryService;
 import com.titaniumpanda.app.domain.PhotoFactory;
 import com.titaniumpanda.app.domain.PhotoService;
+import com.titaniumpanda.app.repository.CategoryRepository;
 import com.titaniumpanda.app.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +15,7 @@ public class ApplicationResourceConfiguration {
 
     @Autowired
     PhotoRepository photoRepository;
+    CategoryRepository categoryRepository;
 
     @Bean
     public PhotoService photoService() {
@@ -23,7 +24,7 @@ public class ApplicationResourceConfiguration {
 
     @Bean
     public CategoryService categoryService() {
-        return new CategoryService(categoryDao(), categoryFactory());
+        return new CategoryService(categoryRepository, categoryFactory());
     }
 
     @Bean
@@ -35,11 +36,4 @@ public class ApplicationResourceConfiguration {
     public CategoryFactory categoryFactory() {
         return new CategoryFactory();
     }
-
-
-    @Bean
-    public CategoryDao categoryDao() {
-        return new CategoryDao();
-    }
-
 }

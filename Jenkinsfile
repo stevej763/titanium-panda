@@ -15,10 +15,8 @@ node {
     stage('pre-info') {
         setCreds()
         echo "Running build #${buildId} on ${jenkinsUrl}"
-        echo "What does my git look like now?"
         sh('git branch -v -a')
         sh("git status")
-        echo "trying the inbuilt checkout command"
         checkout([
                 $class: 'GitSCM',
                 branches: [[name: branchName]],
@@ -28,6 +26,10 @@ node {
                     url: 'https://github.com/stevej763/titanium-panda.git']
                 ]
             ])
+        sh('git branch -v -a')
+        sh("git status")
+        commitShaOfBranch = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+        echo("branch commit id: ${commitShaOfBranch}")
 
     }
     stage('Verify') {
@@ -65,7 +67,7 @@ node {
                 sh('git config --global user.name "${GIT_USERNAME}"')
                 sh('git fetch https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')
                 sh('git checkout main')
-                sh('git merge ${GIT_COMMIT}')
+                sh('git merge ${BRANCH_NAME}')
                 sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')
             }
         }

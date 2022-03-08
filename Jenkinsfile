@@ -49,7 +49,7 @@ node {
         }
     }
     stage('Merge on pass') {
-        if ((currentBuild.result == null || currentBuild.result == 'SUCCESS') && ${BRANCH_NAME} != 'main') {
+        if ((currentBuild.result == null || currentBuild.result == 'SUCCESS') && BRANCH_NAME != 'main') {
 
             withCredentials([usernamePassword(credentialsId: 'jenkins-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                 sh('git config --global user.email "${GIT_USERNAME}@ci.com"')

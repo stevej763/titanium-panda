@@ -1,7 +1,7 @@
 package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.photo.PhotoDto;
-import com.titaniumpanda.app.dao.PhotoDao;
+import com.titaniumpanda.app.repository.PhotoRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,23 +16,23 @@ import static org.mockito.Mockito.when;
 public class PhotoServiceTest {
 
     private final PhotoFactory photoFactory = mock(PhotoFactory.class);
-    private final PhotoDao photoDao = mock(PhotoDao.class);
+    private final PhotoRepository photoRepository = mock(PhotoRepository.class);
 
-    private final PhotoService underTest = new PhotoService(photoFactory, photoDao);
+    private final PhotoService underTest = new PhotoService(photoFactory, photoRepository);
     private final String photoId = "100";
 
     @Test
     public void shouldReturnPhotoDto() {
         PhotoDto photoDto = new PhotoDto("photo title", photoId, "photoUrl", "description");
         Photo photo = new Photo("title", "id", "photoUrl", "description");
-        when(photoDao.findById(photoId)).thenReturn(Optional.of(photo));
+        when(photoRepository.findByPhotoId(photoId)).thenReturn(Optional.of(photo));
         when(photoFactory.convertToDto(photo)).thenReturn(photoDto);
         assertThat(underTest.findPhotoBy(photoId), is(Optional.of(photoDto)));
     }
 
     @Test
     public void shouldReturnOptionalEmptyIfIdNotFound() {
-        when(photoDao.findById(photoId)).thenReturn(Optional.empty());
+        when(photoRepository.findById(photoId)).thenReturn(Optional.empty());
         assertThat(underTest.findPhotoBy(photoId), is(Optional.empty()));
     }
 
@@ -55,7 +55,7 @@ public class PhotoServiceTest {
                 photoDto3
         );
 
-        when(photoDao.findAll()).thenReturn(photos);
+        when(photoRepository.findAll()).thenReturn(photos);
         when(photoFactory.convertToDto(photo1)).thenReturn(photoDto1);
         when(photoFactory.convertToDto(photo2)).thenReturn(photoDto2);
         when(photoFactory.convertToDto(photo3)).thenReturn(photoDto3);

@@ -1,7 +1,6 @@
 package com.titaniumpanda.app;
 
 import com.titaniumpanda.app.dao.CategoryDao;
-import com.titaniumpanda.app.dao.PhotoDao;
 import com.titaniumpanda.app.domain.CategoryFactory;
 import com.titaniumpanda.app.domain.CategoryService;
 import com.titaniumpanda.app.domain.PhotoFactory;
@@ -19,7 +18,7 @@ public class ApplicationResourceConfiguration {
 
     @Bean
     public PhotoService photoService() {
-        return new PhotoService(photoFactory(), photoDao());
+        return new PhotoService(photoFactory(), photoRepository);
     }
 
     @Bean
@@ -30,11 +29,6 @@ public class ApplicationResourceConfiguration {
     @Bean
     public PhotoFactory photoFactory() {
         return new PhotoFactory();
-    }
-
-    @Bean
-    public PhotoDao photoDao() {
-        return new PhotoDao(photoRepository);
     }
 
     @Bean

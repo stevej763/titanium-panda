@@ -1,7 +1,7 @@
 package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.photo.PhotoDto;
-import com.titaniumpanda.app.dao.PhotoDao;
+import com.titaniumpanda.app.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -12,18 +12,18 @@ public class PhotoService {
 
     @Autowired
     private final PhotoFactory photoFactory;
-    private final PhotoDao photoDao;
+    private final PhotoRepository photoRepository;
 
-    public PhotoService(PhotoFactory photoFactory, PhotoDao photoDao) {
+    public PhotoService(PhotoFactory photoFactory, PhotoRepository photoRepository) {
         this.photoFactory = photoFactory;
-        this.photoDao = photoDao;
+        this.photoRepository = photoRepository;
     }
 
     public Optional<PhotoDto> findPhotoBy(String id) {
-       return photoDao.findById(id).map(photoFactory::convertToDto);
+       return photoRepository.findByPhotoId(id).map(photoFactory::convertToDto);
     }
 
     public List<PhotoDto> findAll() {
-        return photoDao.findAll().stream().map(photoFactory::convertToDto).collect(Collectors.toList());
+        return photoRepository.findAll().stream().map(photoFactory::convertToDto).collect(Collectors.toList());
     }
 }

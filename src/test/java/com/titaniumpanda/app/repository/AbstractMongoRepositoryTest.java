@@ -19,14 +19,14 @@ abstract public class AbstractMongoRepositoryTest {
     protected static MongoTemplate mongoTemplate;
 
     @BeforeEach
-    void setUp() {
+    void setUpDatabase() {
         String hostname = environment.getProperty("spring.data.mongodb.host");
         String port = environment.getProperty("spring.data.mongodb.port");
         mongoTemplate = new MongoTemplate(MongoClients.create("mongodb://" + hostname + ":" + port), testDatabaseName);
     }
 
     @AfterEach
-    void tearDown() {
+    void cleanDatabase() {
         mongoTemplate.dropCollection(collectionName);
     }
 }

@@ -68,7 +68,7 @@ node {
                 sh('git fetch https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')
                 sh('git checkout main')
                 echo(commitShaOfBranch)
-                sh('git merge origin/${commitShaOfBranch}')
+                sh "git merge origin/${commitShaOfBranch}"
                 sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')
             }
         }

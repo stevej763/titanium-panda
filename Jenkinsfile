@@ -11,26 +11,20 @@ def setCreds() {
 }
 
 node {
-    
+
     stage('pre-info') {
         setCreds()
         echo "Running build #${buildId} on ${jenkinsUrl}"
         echo "What does my git look like now?"
         sh 'git branch -v -a'
         sh("git status")
-        
+
     }
-
-
+    stage('Verify') {
         withEnv(["PATH+MAVEN=${tool 'Maven'}/bin"]) {
             sh 'mvn -B verify'
         }
-
-     withCredentials([usernamePassword(credentialsId: 'jenkins-github-token', passwordVariable: 'githubPassword', usernameVariable: 'githubUsername')]) {
-        echo "now has github credentials for user: ${githubUsername}"
-        sh("git config --list --show-origin")
-     }
-
+    }
 
     stage('Build') {
         echo "Building ${branchName}...."
@@ -55,7 +49,7 @@ node {
     }
     stage('Merge on pass') {
         if (currentBuild.result == null || currentBuild.result == 'SUCCESS' && ${BRANCH_NAME} != 'main') {
-            
+
             withCredentials([usernamePassword(credentialsId: 'jenkins-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                 sh('git config --global user.email "${GIT_USERNAME}@ci.com"')
                 sh('git config --global user.name "${GIT_USERNAME}"')

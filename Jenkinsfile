@@ -31,13 +31,13 @@ node {
     stage('Maven Build') {
         echo "Building ${branchName}...."
         withEnv(["PATH+MAVEN=${tool 'Maven'}/bin"]) {
-                'mvn clean package -DskipTests=true'
+                sh 'mvn clean package -DskipTests=true -Dspring.profiles.active=jenkins'
             }
     }
 
     stage('Maven Test') {
         withEnv(["PATH+MAVEN=${tool 'Maven'}/bin"]) {
-                    sh 'mvn test'
+                    sh 'mvn test -Dspring.profiles.active=jenkins'
                 }
         always {
             echo 'Testing ${branchName}....'

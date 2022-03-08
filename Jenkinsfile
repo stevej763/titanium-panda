@@ -4,6 +4,7 @@ String branchName = env.BRANCH_NAME
 String gitUrl = env.GIT_URL
 String buildId = env.BUILD_ID
 String jenkinsUrl = env.JENKINS_URL
+String commitShaOfBranch = ""
 
 def setCreds() {
     sh('git config --global user.email "${GIT_USERNAME}@ci.com"')
@@ -67,7 +68,7 @@ node {
                 sh('git config --global user.name "${GIT_USERNAME}"')
                 sh('git fetch https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')
                 sh('git checkout main')
-                sh('git merge ${BRANCH_NAME}')
+                sh('git merge ${commitShaOfBranch}')
                 sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')
             }
         }

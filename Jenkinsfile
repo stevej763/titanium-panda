@@ -39,6 +39,7 @@ pipeline {
                         sh('git merge ${GIT_COMMIT}')
                         sh('git status')
                         sh('git log')
+                        sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')
                     }
                 }
             }

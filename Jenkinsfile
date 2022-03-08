@@ -31,6 +31,9 @@ pipeline {
                         sh('git config --global user.name "${GIT_USERNAME}"')
                         sh("git tag -a tag-${GIT_COMMIT} -m 'Jenkins'")
                         sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git --tags')
+                        echo("attempting to fetch origin")
+                        sh('git fetch')
+                        sh('git branch -v -a')
                     }
                 }
             }

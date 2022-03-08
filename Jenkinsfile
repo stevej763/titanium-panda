@@ -3,6 +3,7 @@
 String branchName = env.BRANCH_NAME
 String buildId = env.BUILD_ID
 String jenkinsUrl = env.JENKINS_URL
+String main_branch = 'main'
 
 def setCreds() {
     sh('git config --global user.email "${GIT_USERNAME}@ci.com"')
@@ -61,8 +62,14 @@ node {
                 sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')
             }
         }
+        if (BRANCH_NAME == main_branch) {
+            echo("On branch ${main_branch}. No merge necessary.")
+            echo("to-do: add separate pipeline for main. ")
+
+        }
     }
     stage('Deploy') {
         echo 'Reached deploy stage'
+        echo 'to-do: implement creating docker image and pushing to repo.'
     }
 }

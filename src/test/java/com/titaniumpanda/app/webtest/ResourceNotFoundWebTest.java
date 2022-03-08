@@ -15,6 +15,6 @@ public class ResourceNotFoundWebTest extends AbstractWebTest {
     public void shouldReturnFourZeroFour() {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/" + UUID.randomUUID(), String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.NOT_FOUND));
-        assertThat(responseEntity.getBody(), is("{\"statusCode\":404,\"errorMessage\":\"Resource not found\"}"));
+        assertThat(responseEntity.getBody(), is("{\"statusCode\":405,\"errorMessage\":\"Resource not found\"}"));
     }
 }

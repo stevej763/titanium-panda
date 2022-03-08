@@ -16,8 +16,18 @@ node {
         setCreds()
         echo "Running build #${buildId} on ${jenkinsUrl}"
         echo "What does my git look like now?"
-        sh 'git branch -v -a'
+        sh('git branch -v -a')
         sh("git status")
+        echo "trying the inbuilt checkout command"
+        checkout([
+                $class: 'GitSCM',
+                branches: [[name: branchName]],
+                extensions: [],
+                userRemoteConfigs: [
+                    [credentialsId: 'jenkins-ci',
+                    url: 'https://github.com/stevej763/titanium-panda.git']
+                ]
+            ])
 
     }
     stage('Verify') {

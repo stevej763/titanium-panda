@@ -20,10 +20,8 @@ public class CategoryResourceWebTest extends AbstractWebTest {
     }
 
     @BeforeEach
-    @Override
     void setUp() {
         locahostWithPort = "http://localhost:" + port;
-        super.setUp();
     }
 
     @Test

@@ -1,9 +1,12 @@
 package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.photo.PhotoDto;
+import com.titaniumpanda.app.domain.ids.CategoryId;
+import com.titaniumpanda.app.domain.ids.PhotoId;
 import com.titaniumpanda.app.repository.PhotoRepository;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,40 +18,51 @@ import static org.mockito.Mockito.when;
 
 public class PhotoServiceTest {
 
+    private static final PhotoId PHOTO_ID = new PhotoId();
+    private static final CategoryId CATEGORY_ID = new CategoryId();
+    private final List<CategoryId> categoryIds = List.of(CATEGORY_ID);
+    private static final String PHOTO_BASE_URL = "baseUrl";
+    private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.now();
+    private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.now();
+    private static final String PHOTO_DESCRIPTION = "description";
+    private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
+    private static final String TITLE = "title";
     private final PhotoFactory photoFactory = mock(PhotoFactory.class);
     private final PhotoRepository photoRepository = mock(PhotoRepository.class);
 
     private final PhotoService underTest = new PhotoService(photoFactory, photoRepository);
-    private final String photoId = "100";
 
     @Test
     public void shouldReturnPhotoDto() {
-        PhotoDto photoDto = new PhotoDto("photo title", photoId, "photoUrl", "description");
-        Photo photo = new Photo("title", "id", "photoUrl", "description");
-        when(photoRepository.findByPhotoId(photoId)).thenReturn(Optional.of(photo));
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, "title", "photoUrl", "description", null, null, null, null);
+        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, List.of(CATEGORY_ID));
+        when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
         when(photoFactory.convertToDto(photo)).thenReturn(photoDto);
-        assertThat(underTest.findPhotoBy(photoId), is(Optional.of(photoDto)));
+        assertThat(underTest.findPhotoBy(PHOTO_ID), is(Optional.of(photoDto)));
     }
 
     @Test
     public void shouldReturnOptionalEmptyIfIdNotFound() {
-        when(photoRepository.findByPhotoId(photoId)).thenReturn(Optional.empty());
-        assertThat(underTest.findPhotoBy(photoId), is(Optional.empty()));
+        when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.empty());
+        assertThat(underTest.findPhotoBy(PHOTO_ID), is(Optional.empty()));
     }
 
     @Test
     public void shouldReturnSetOfPhotoDtoObjects() {
-        Photo photo1 = new Photo("photo title", "1", "photoUrl", "description");
-        Photo photo2 = new Photo("photo title", "2", "photoUrl", "description");
-        Photo photo3 = new Photo("photo title", "3", "photoUrl", "description");
+        PhotoId photoId1 = new PhotoId();
+        PhotoId photoId2 = new PhotoId();
+        PhotoId photoId3 = new PhotoId();
+        Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, categoryIds);
+        Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, categoryIds);
+        Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, categoryIds);
         List<Photo> photos = List.of(
                 photo1,
                 photo2,
                 photo3
         );
-        PhotoDto photoDto1 = new PhotoDto("photo title", "1", "photoUrl", "description");
-        PhotoDto photoDto2 = new PhotoDto("photo title", "2", "photoUrl", "description");
-        PhotoDto photoDto3 = new PhotoDto("photo title", "3", "photoUrl", "description");
+        PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL,categoryIds);
+        PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL,categoryIds);
+        PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL,categoryIds);
         List<PhotoDto> photoDtos = List.of(
                 photoDto1,
                 photoDto2,

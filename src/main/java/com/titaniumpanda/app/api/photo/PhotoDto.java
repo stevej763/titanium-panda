@@ -1,41 +1,74 @@
 package com.titaniumpanda.app.api.photo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.titaniumpanda.app.domain.ids.CategoryId;
+import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class PhotoDto {
 
+    private final PhotoId photoId;
     private final String title;
-    private final String photoId;
-    private final String photoUrl;
+    private final String photoThumbnailUrl;
     private final String description;
+    private final LocalDateTime createdDateTime;
+    private final LocalDateTime modifiedDateTime;
+    private final String photoBaseUrl;
+    private final List<CategoryId> categoryIds;
 
-    public PhotoDto(@JsonProperty("title") String title,
-                    @JsonProperty("photoId") String photoId,
-                    @JsonProperty("photoUrl") String photoUrl,
-                    @JsonProperty("description") String description) {
-        this.title = title;
+    public PhotoDto(@JsonProperty("photoId") PhotoId photoId,
+                    @JsonProperty("title") String title,
+                    @JsonProperty("photoThumbnailUrl") String photoThumbnailUrl,
+                    @JsonProperty("description") String description,
+                    @JsonProperty("createdDateTime") LocalDateTime createdDateTime,
+                    @JsonProperty("modifiedDateTime") LocalDateTime modifiedDateTime,
+                    @JsonProperty("photoBaseUrl") String photoBaseUrl,
+                    @JsonProperty("categoryIds") List<CategoryId> categoryIds) {
         this.photoId = photoId;
-        this.photoUrl = photoUrl;
+        this.title = title;
+        this.photoThumbnailUrl = photoThumbnailUrl;
         this.description = description;
+        this.createdDateTime = createdDateTime;
+        this.modifiedDateTime = modifiedDateTime;
+        this.photoBaseUrl = photoBaseUrl;
+        this.categoryIds = categoryIds;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getPhotoId() {
+    public PhotoId getPhotoId() {
         return photoId;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public String getPhotoThumbnailUrl() {
+        return photoThumbnailUrl;
+    }
+
+    public LocalDateTime getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public LocalDateTime getModifiedDateTime() {
+        return modifiedDateTime;
+    }
+
+    public String getPhotoBaseUrl() {
+        return photoBaseUrl;
+    }
+
+    public List<CategoryId> getCategoryIds() {
+        return categoryIds;
     }
 
     @Override

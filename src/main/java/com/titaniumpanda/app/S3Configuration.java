@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import java.util.Objects;
-
 @Configuration
 public class S3Configuration {
 
@@ -24,23 +22,27 @@ public class S3Configuration {
 
     @Bean
     public AmazonS3 s3Client() {
+        BasicAWSCredentials credentials = getCredentials();
 
-        BasicAWSCredentials credentials = new BasicAWSCredentials(
-                Objects.requireNonNull(environment.getProperty("aws-access-key")),
-                Objects.requireNonNull(environment.getProperty("aws-secret-key")));
-
-        return AmazonS3ClientBuilder.standard()
+        return AmazonS3ClientBuilder
+                .standard()
                 .withEndpointConfiguration(getEndpointConfiguration())
                 .withPathStyleAccessEnabled(true)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
     }
 
+    private BasicAWSCredentials getCredentials() {
+        return new BasicAWSCredentials(
+                environment.getProperty("aws-access-key"),
+                environment.getProperty("aws-secret-key"));
+    }
+
     private AwsClientBuilder.EndpointConfiguration getEndpointConfiguration() {
         String serviceEndpoint = "http://"+environment.getProperty("s3.minio.hostname")+ ":" + environment.getProperty("s3.minio.port");
         LOGGER.info("Service endpoint={}", serviceEndpoint);
         return new AwsClientBuilder.EndpointConfiguration(
-                "http://jenkins-s3:9000",
+                serviceEndpoint,
                 "eu-west-1");
     }
 

@@ -22,11 +22,6 @@ public class MongoDbConfiguration {
         return new MongoTemplate(mongoClient(), environment.getProperty("mongodb.database"));
     }
 
-    @Bean
-    public MongoTemplate mongoTestTemplate() {
-        return new MongoTemplate(mongoClient(), environment.getProperty("mongodb.testDatabase"));
-    }
-
     public MongoClient mongoClient() {
         ConnectionString connectionString = getConnectionString();
         MongoClientSettings mongoClientSettings = mongoClientSettings(connectionString);

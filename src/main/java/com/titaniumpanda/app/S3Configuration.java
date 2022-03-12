@@ -20,14 +20,24 @@ public class S3Configuration {
 
     @Bean
     public AmazonS3 s3Client() {
+
         BasicAWSCredentials credentials = new BasicAWSCredentials(
                 Objects.requireNonNull(environment.getProperty("aws-access-key")),
                 Objects.requireNonNull(environment.getProperty("aws-secret-key")));
+
         return AmazonS3ClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:9000", environment.getProperty("aws-region")))
+                .withEndpointConfiguration(getEndpointConfiguration())
                 .withPathStyleAccessEnabled(true)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
+    }
+
+    private AwsClientBuilder.EndpointConfiguration getEndpointConfiguration() {
+        String serviceEndpoint = "http://"+environment.getProperty("s3.minio.hostname")+ ":" + environment.getProperty("s3.minio.port");
+
+        return new AwsClientBuilder.EndpointConfiguration(
+                serviceEndpoint,
+                environment.getProperty("aws-region"));
     }
 
 }

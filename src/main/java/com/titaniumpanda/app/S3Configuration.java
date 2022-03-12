@@ -34,7 +34,6 @@ public class S3Configuration {
 
     private AwsClientBuilder.EndpointConfiguration getEndpointConfiguration() {
         String serviceEndpoint = "http://"+environment.getProperty("s3.minio.hostname")+ ":" + environment.getProperty("s3.minio.port");
-
         return new AwsClientBuilder.EndpointConfiguration(
                 serviceEndpoint,
                 environment.getProperty("aws-region"));

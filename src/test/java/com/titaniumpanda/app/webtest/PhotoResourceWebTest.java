@@ -10,6 +10,7 @@ import com.titaniumpanda.app.domain.ids.CategoryId;
 import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,6 @@ public class PhotoResourceWebTest extends AbstractWebTest {
     @BeforeAll
     static void beforeAll() {
         collectionName = "photo";
-
     }
 
     @BeforeEach
@@ -57,8 +57,9 @@ public class PhotoResourceWebTest extends AbstractWebTest {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
         PhotoDto expected = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         String serialisedExpectation = objectMapper.writeValueAsString(expected);
+
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(responseEntity.getBody(), is(serialisedExpectation));
     }
 
@@ -87,4 +88,11 @@ public class PhotoResourceWebTest extends AbstractWebTest {
         assertThat(responseEntity.getBody(), is(expected));
     }
 
+    @Disabled
+    @Test
+    public void shouldPostNewPhoto() {
+        //TODO
+        // Figure out how to test photo file upload with metadata using restTemplate.
+        // Spent too many hours trying to make a test for something that works when running the live application.
+    }
 }

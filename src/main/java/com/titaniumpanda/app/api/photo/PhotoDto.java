@@ -1,5 +1,6 @@
 package com.titaniumpanda.app.api.photo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.titaniumpanda.app.domain.ids.CategoryId;
 import com.titaniumpanda.app.domain.ids.PhotoId;
@@ -45,6 +46,11 @@ public class PhotoDto {
 
     public PhotoId getPhotoId() {
         return photoId;
+    }
+
+    @JsonIgnore
+    public String getPhotoIdAsString() {
+        return photoId.getId().toString();
     }
 
     public String getDescription() {

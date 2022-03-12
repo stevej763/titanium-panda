@@ -1,5 +1,6 @@
 package com.titaniumpanda.app.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.titaniumpanda.app.domain.ids.CategoryId;
 import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,28 +18,28 @@ public class Photo {
 
     private final String title;
     private final String photoThumbnailUrl;
-    private final String photoDescription;
+    private final String description;
     private final LocalDateTime createdDateTime;
     private final LocalDateTime modifiedDateTime;
     private final String photoBaseUrl;
-    private final List<CategoryId> categories;
+    private final List<CategoryId> categoryIds;
 
-    public Photo(PhotoId photoId,
-                 String title,
-                 String photoThumbnailUrl,
-                 String photoDescription,
-                 LocalDateTime createdDateTime,
-                 LocalDateTime modifiedDateTime,
-                 String photoBaseUrl,
-                 List<CategoryId> categories) {
+    public Photo(@JsonProperty("photoId") PhotoId photoId,
+                 @JsonProperty("title") String title,
+                 @JsonProperty("photoThumbnailUrl") String photoThumbnailUrl,
+                 @JsonProperty("description") String description,
+                 @JsonProperty("createdDateTime") LocalDateTime createdDateTime,
+                 @JsonProperty("modifiedDateTime") LocalDateTime modifiedDateTime,
+                 @JsonProperty("photoBaseUrl") String photoBaseUrl,
+                 @JsonProperty("categoryIds") List<CategoryId> categoryIds) {
         this.photoId = photoId;
         this.title = title;
         this.photoThumbnailUrl = photoThumbnailUrl;
-        this.photoDescription = photoDescription;
+        this.description = description;
         this.createdDateTime = createdDateTime;
         this.modifiedDateTime = modifiedDateTime;
         this.photoBaseUrl = photoBaseUrl;
-        this.categories = categories;
+        this.categoryIds = categoryIds;
     }
 
     public PhotoId getPhotoId() {
@@ -53,8 +54,8 @@ public class Photo {
         return photoThumbnailUrl;
     }
 
-    public String getPhotoDescription() {
-        return photoDescription;
+    public String getDescription() {
+        return description;
     }
 
     public LocalDateTime getCreatedDateTime() {
@@ -69,8 +70,8 @@ public class Photo {
         return photoBaseUrl;
     }
 
-    public List<CategoryId> getCategories() {
-        return categories;
+    public List<CategoryId> getCategoryIds() {
+        return categoryIds;
     }
 
     @Override

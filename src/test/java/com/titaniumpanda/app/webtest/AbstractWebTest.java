@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 public abstract class AbstractWebTest {
 
-    protected static String collectionName = "test";
+    protected static String collectionName = "photo";
 
     @LocalServerPort
     protected int port;

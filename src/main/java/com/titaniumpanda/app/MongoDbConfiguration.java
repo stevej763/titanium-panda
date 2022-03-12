@@ -19,8 +19,12 @@ public class MongoDbConfiguration {
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        String database = environment.getProperty("mongodb.database");
-        return new MongoTemplate(mongoClient(), database);
+        return new MongoTemplate(mongoClient(), environment.getProperty("mongodb.database"));
+    }
+
+    @Bean
+    public MongoTemplate mongoTestTemplate() {
+        return new MongoTemplate(mongoClient(), environment.getProperty("mongodb.testDatabase"));
     }
 
     public MongoClient mongoClient() {

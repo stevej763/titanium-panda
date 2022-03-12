@@ -27,7 +27,7 @@ public class AwsPhotoUploadResourceImpl implements FileUploadResource<PhotoUploa
             InputStream inputStream = file.getInputStream();
             String fileKey = idService.getNewS3UploadId().getId() + ".jpeg";
 
-            return photoS3Client.upload(fileKey, inputStream);
+            return photoS3Client.upload(fileKey, inputStream, file.getSize());
         } catch (IOException e) {
             return Optional.empty();
         }

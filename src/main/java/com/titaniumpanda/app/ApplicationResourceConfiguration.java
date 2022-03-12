@@ -38,7 +38,7 @@ public class ApplicationResourceConfiguration {
     }
 
     @Bean
-    public PhotoService photoSearchService() {
+    public PhotoService photoService() {
         return new PhotoService(photoFactory(), photoRepository, photoUploadService());
     }
 

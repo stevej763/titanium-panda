@@ -1,4 +1,4 @@
-package com.titaniumpanda.app.webtest;
+package com.titaniumpanda.app.integration.web;
 
 import com.titaniumpanda.app.domain.Category;
 import org.junit.jupiter.api.BeforeAll;

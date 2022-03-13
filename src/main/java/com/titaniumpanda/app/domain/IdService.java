@@ -12,7 +12,7 @@ public class IdService {
         return new PhotoId();
     }
 
-    public PhotoId getNewS3UploadId() {
+    public S3UploadId getNewS3UploadId() {
         return new S3UploadId();
     }
 }

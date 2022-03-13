@@ -1,13 +1,8 @@
 package com.titaniumpanda.app.domain.ids;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.util.UUID;
 
-public class S3UploadId extends PhotoId {
+public class S3UploadId extends AbstractId {
 
     public S3UploadId() {
     }
@@ -16,22 +11,7 @@ public class S3UploadId extends PhotoId {
         super(id);
     }
 
-    public S3UploadId(@JsonProperty("id") String id) {
+    public S3UploadId(String id) {
         super(id);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

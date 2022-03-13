@@ -1,10 +1,10 @@
-package com.titaniumpanda.app.ingtegration;
+package com.titaniumpanda.app.integration.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 import com.titaniumpanda.app.domain.PhotoService;
-import com.titaniumpanda.app.webtest.AbstractWebTest;
+import com.titaniumpanda.app.integration.web.AbstractWebTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

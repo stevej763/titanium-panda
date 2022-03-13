@@ -1,4 +1,4 @@
-package com.titaniumpanda.app.webtest;
+package com.titaniumpanda.app.integration.web;
 
 import com.titaniumpanda.app.TestMongoDbConfiguration;
 import com.titaniumpanda.app.TitaniumPandaApplication;

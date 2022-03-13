@@ -1,4 +1,4 @@
-package com.titaniumpanda.app.webtest;
+package com.titaniumpanda.app.integration.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +37,7 @@ public class PhotoResourceWebTest extends AbstractWebTest {
     private static final PhotoId PHOTO_ID = new PhotoId();
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final FileSystemResource file = new FileSystemResource("src/test/resources/testimage.jpeg");
+    private final FileSystemResource testPhotoFile = new FileSystemResource("src/test/resources/testimage.jpeg");
 
     private String localhostWithPort;
 
@@ -94,17 +94,18 @@ public class PhotoResourceWebTest extends AbstractWebTest {
 
     @Test
     public void shouldPostNewPhoto() {
-        HttpHeaders headers = getMultipartFormHeaders();
-
-        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        map.add("title", requestMetadata);
-        map.add("photo", file);
-
-        HttpEntity<Object> request = new HttpEntity<>(map, headers);
+        HttpEntity<Object> request = createRequest(requestMetadata, testPhotoFile);
         String url = localhostWithPort + "/api/photo/upload";
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         assertThat(responseEntity.hasBody(), is(true));
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.CREATED));
+    }
+
+    private HttpEntity<Object> createRequest(PhotoRequestMetadata requestMetadata, FileSystemResource testPhotoFile) {
+        MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("metadata", requestMetadata);
+        requestBody.add("photo", testPhotoFile);
+        return new HttpEntity<>(requestBody, getMultipartFormHeaders());
     }
 
     private HttpHeaders getMultipartFormHeaders() {

@@ -1,8 +1,9 @@
-package com.titaniumpanda.app.repository;
+package com.titaniumpanda.app.integration.repository;
 
 import com.titaniumpanda.app.domain.Photo;
 import com.titaniumpanda.app.domain.ids.CategoryId;
 import com.titaniumpanda.app.domain.ids.PhotoId;
+import com.titaniumpanda.app.repository.PhotoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

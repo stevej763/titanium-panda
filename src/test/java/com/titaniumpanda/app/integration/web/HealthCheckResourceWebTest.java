@@ -1,4 +1,4 @@
-package com.titaniumpanda.app.webtest;
+package com.titaniumpanda.app.integration.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;

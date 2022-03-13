@@ -36,8 +36,9 @@ public class S3ClientDelegate {
 
             s3Client.putObject(putObjectRequest);
         } catch (Exception e) {
-            LOGGER.error("Error putting object..");
+            LOGGER.error("Error putting object into bucket={}", bucketName);
             LOGGER.error(e.getMessage());
+            return Optional.empty();
         }
         String url = s3Client.getUrl(bucketName, fileKey).toString();
         return Optional.of(new PhotoUploadDetails(url, url));

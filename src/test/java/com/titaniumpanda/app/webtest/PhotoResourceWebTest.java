@@ -5,15 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.titaniumpanda.app.api.photo.PhotoDto;
+import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 import com.titaniumpanda.app.domain.Photo;
 import com.titaniumpanda.app.domain.ids.CategoryId;
 import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,12 +30,14 @@ public class PhotoResourceWebTest extends AbstractWebTest {
     private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
-    private static final String PHOTO_DESCRIPTION = "description";
+    private static final String PHOTO_DESCRIPTION = "PhotoResourceWebTest";
     private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
+    private final PhotoRequestMetadata requestMetadata = new PhotoRequestMetadata(TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
     private static final PhotoId PHOTO_ID = new PhotoId();
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final FileSystemResource file = new FileSystemResource("src/test/resources/testimage.jpeg");
 
     private String localhostWithPort;
 
@@ -51,7 +55,7 @@ public class PhotoResourceWebTest extends AbstractWebTest {
     @Test
     public void shouldReturnSerializedPhotoDto() throws JsonProcessingException {
         Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        mongoTemplate.save(photo, collectionName);
+        mongoTestTemplate.save(photo, collectionName);
 
         String url = localhostWithPort + "/api/photo/" + PHOTO_ID.getId();
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
@@ -72,9 +76,9 @@ public class PhotoResourceWebTest extends AbstractWebTest {
         Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
 
-        mongoTemplate.save(photo1);
-        mongoTemplate.save(photo2);
-        mongoTemplate.save(photo3);
+        mongoTestTemplate.save(photo1);
+        mongoTestTemplate.save(photo2);
+        mongoTestTemplate.save(photo3);
 
         PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
@@ -88,11 +92,24 @@ public class PhotoResourceWebTest extends AbstractWebTest {
         assertThat(responseEntity.getBody(), is(expected));
     }
 
-    @Disabled
     @Test
     public void shouldPostNewPhoto() {
-        //TODO
-        // Figure out how to test photo file upload with metadata using restTemplate.
-        // Spent too many hours trying to make a test for something that works when running the live application.
+        HttpHeaders headers = getMultipartFormHeaders();
+
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        map.add("title", requestMetadata);
+        map.add("photo", file);
+
+        HttpEntity<Object> request = new HttpEntity<>(map, headers);
+        String url = localhostWithPort + "/api/photo/upload";
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
+        assertThat(responseEntity.hasBody(), is(true));
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.CREATED));
+    }
+
+    private HttpHeaders getMultipartFormHeaders() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return httpHeaders;
     }
 }

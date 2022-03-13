@@ -43,7 +43,7 @@ public class S3IntegrationTest extends AbstractWebTest {
     public void shouldSuccessfullySavePhoto() {
         MockMultipartFile file = new MockMultipartFile(photoTitle, bytes);
 
-        PhotoRequestMetadata metadata = new PhotoRequestMetadata(photoTitle, "description", Collections.emptyList());
+        PhotoRequestMetadata metadata = new PhotoRequestMetadata(photoTitle, "S3IntegrationTest", Collections.emptyList());
         photoService.save(file, metadata);
 
         List<PhotoDto> savedPhotos = photoService.findAll();

@@ -26,8 +26,9 @@ public class CategoryResourceWebTest extends AbstractWebTest {
 
     @Test
     public void shouldReturnSerializedCategory() {
-        Category category = new Category("1", "category name", "thumbnailUrl", "description");
-        mongoTemplate.save(category, collectionName);
+        String description = "CategoryResourceWebTest";
+        Category category = new Category("1", "category name", "thumbnailUrl", description);
+        mongoTestTemplate.save(category, collectionName);
 
         String url = locahostWithPort + "/api/category/1";
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
@@ -36,7 +37,7 @@ public class CategoryResourceWebTest extends AbstractWebTest {
                 "\"categoryId\":\"1\"," +
                 "\"categoryName\":\"category name\"," +
                 "\"categoryThumbnailUrl\":\"thumbnailUrl\"," +
-                "\"categoryDescription\":\"description\"" +
+                "\"categoryDescription\":\"CategoryResourceWebTest\"" +
                 "}"));
     }
 
@@ -45,9 +46,9 @@ public class CategoryResourceWebTest extends AbstractWebTest {
         Category category1 = new Category("1", "category name", "thumbnailUrl", "description");
         Category category2 = new Category("2", "category name", "thumbnailUrl", "description");
         Category category3 = new Category("3", "category name", "thumbnailUrl", "description");
-        mongoTemplate.save(category1);
-        mongoTemplate.save(category2);
-        mongoTemplate.save(category3);
+        mongoTestTemplate.save(category1);
+        mongoTestTemplate.save(category2);
+        mongoTestTemplate.save(category3);
 
 
         String url = locahostWithPort + "/api/category/all";

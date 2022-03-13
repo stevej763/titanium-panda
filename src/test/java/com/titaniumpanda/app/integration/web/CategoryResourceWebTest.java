@@ -104,5 +104,4 @@ public class CategoryResourceWebTest extends AbstractWebTest {
         httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
         return httpHeaders;
     }
-
 }

@@ -32,9 +32,9 @@ public class PhotoResource {
         this.photoUploadResource = photoUploadResource;
     }
 
-    @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<PhotoDto> getPhoto(@PathVariable("id") UUID id) {
-        Optional<PhotoDto> photoDto = photoService.findPhotoBy(id);
+    @GetMapping(value = "{photoId}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<PhotoDto> getPhoto(@PathVariable("photoId") UUID photoId) {
+        Optional<PhotoDto> photoDto = photoService.findPhotoBy(photoId);
         if (photoDto.isPresent()) {
             return ResponseEntity.ok().body(photoDto.get());
         } else {
@@ -53,11 +53,10 @@ public class PhotoResource {
         Optional<PhotoDto> response = photoService.save(photo, photoRequestMetadata);
         if (response.isPresent()) {
             PhotoDto photoDto = response.get();
-            String resourceLocation = PHOTO_RESOURCE_URL + "/" + photoDto.getPhotoIdAsString();
+            String resourceLocation = PHOTO_RESOURCE_URL + "/" + photoDto.getPhotoId();
             return ResponseEntity.created(URI.create(resourceLocation)).body(photoDto);
         } else {
             return ResponseEntity.internalServerError().build();
         }
     }
-
 }

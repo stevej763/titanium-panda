@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class PhotoFactory {
 
-    private IdService idService;
+    private final IdService idService;
 
     public PhotoFactory(IdService idService) {
         this.idService = idService;

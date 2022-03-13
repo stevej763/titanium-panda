@@ -2,13 +2,9 @@ package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,10 +28,6 @@ public class PhotoFactoryTest {
     private final Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
     private final PhotoDto dto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
 
-    @BeforeAll
-    static void beforeAll() {
-    }
-
     @Test
     public void shouldConvertToDto() {
         assertThat(underTest.convertToDto(photo), is(dto));
@@ -43,17 +35,13 @@ public class PhotoFactoryTest {
 
     @Test
     public void shouldCreateANewPhoto() {
-        Instant.now(
-                Clock.fixed(
-                        Instant.parse( "2016-01-23T12:34:56Z"), ZoneOffset.UTC
-                )
-        );
         PhotoRequestMetadata metadata = new PhotoRequestMetadata(TITLE, DESCRIPTION, CATEGORY_IDS);
         PhotoUploadDetails photoUploadDetails = new PhotoUploadDetails(PHOTO_THUMBNAIL_URL, PHOTO_BASE_URL);
 
         when(idService.createNewId()).thenReturn(PHOTO_ID);
 
         Photo result = underTest.createNewPhoto(photoUploadDetails, metadata);
+
         assertThat(result.getPhotoId(), is(photo.getPhotoId()));
     }
 

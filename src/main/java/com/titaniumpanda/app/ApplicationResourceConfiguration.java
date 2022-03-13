@@ -55,6 +55,6 @@ public class ApplicationResourceConfiguration {
 
     @Bean
     public CategoryFactory categoryFactory() {
-        return new CategoryFactory();
+        return new CategoryFactory(idService);
     }
 }

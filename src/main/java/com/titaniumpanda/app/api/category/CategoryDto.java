@@ -5,23 +5,27 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class CategoryDto {
 
     private final UUID categoryId;
     private final String categoryName;
-    private final String categoryThumbnailUrl;
     private final String categoryDescription;
+    private final LocalDateTime createdDateTime;
+    private final LocalDateTime modifiedDateTime;
 
     public CategoryDto(@JsonProperty("categoryId") UUID categoryId,
                        @JsonProperty("categoryName") String categoryName,
-                       @JsonProperty("categoryThumbnailUrl") String categoryThumbnailUrl,
-                       @JsonProperty("categoryDescription") String categoryDescription) {
+                       @JsonProperty("categoryDescription") String categoryDescription,
+                       @JsonProperty("createdDateTime")LocalDateTime createdDateTime,
+                       @JsonProperty("modifiedDateTime")LocalDateTime modifiedDateTime) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        this.categoryThumbnailUrl = categoryThumbnailUrl;
         this.categoryDescription = categoryDescription;
+        this.createdDateTime = createdDateTime;
+        this.modifiedDateTime = modifiedDateTime;
     }
 
     public UUID getCategoryId() {
@@ -30,10 +34,6 @@ public class CategoryDto {
 
     public String getCategoryName() {
         return categoryName;
-    }
-
-    public String getCategoryThumbnailUrl() {
-        return categoryThumbnailUrl;
     }
 
     public String getCategoryDescription() {
@@ -53,5 +53,13 @@ public class CategoryDto {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    public LocalDateTime getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public LocalDateTime getModifiedDateTime() {
+        return modifiedDateTime;
     }
 }

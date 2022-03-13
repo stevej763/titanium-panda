@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Document
@@ -15,14 +16,16 @@ public class Category {
     private final UUID categoryId;
 
     private final String categoryName;
-    private final String categoryThumbnailUrl;
     private final String categoryDescription;
+    private final LocalDateTime createdDateTime;
+    private final LocalDateTime modifiedDateTime;
 
-    public Category(UUID categoryId, String categoryName, String categoryThumbnailUrl, String categoryDescription) {
+    public Category(UUID categoryId, String categoryName, String categoryDescription, LocalDateTime createdDateTime, LocalDateTime modifiedDateTime) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        this.categoryThumbnailUrl = categoryThumbnailUrl;
         this.categoryDescription = categoryDescription;
+        this.createdDateTime = createdDateTime;
+        this.modifiedDateTime = modifiedDateTime;
     }
 
     public UUID getCategoryId() {
@@ -31,10 +34,6 @@ public class Category {
 
     public String getCategoryName() {
         return categoryName;
-    }
-
-    public String getCategoryThumbnailUrl() {
-        return categoryThumbnailUrl;
     }
 
     public String getCategoryDescription() {
@@ -54,5 +53,13 @@ public class Category {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    public LocalDateTime getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public LocalDateTime getModifiedDateTime() {
+        return modifiedDateTime;
     }
 }

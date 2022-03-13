@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class S3IntegrationTest extends AbstractWebTest {
 
@@ -48,7 +49,9 @@ public class S3IntegrationTest extends AbstractWebTest {
         List<PhotoDto> savedPhotos = photoService.findAll();
         Optional<PhotoDto> savedPhoto = savedPhotos.stream().filter(photoDto -> photoDto.getTitle().equals(photoTitle)).findFirst();
 
-        assertThat(savedPhoto.isPresent(), is(true));
+        if (savedPhoto.isEmpty()) {
+            fail("Photo failed to save");
+        }
 
         PhotoDto result = savedPhoto.get();
 

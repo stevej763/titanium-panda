@@ -1,5 +1,6 @@
 package com.titaniumpanda.app.domain;
 
+import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 import com.titaniumpanda.app.domain.ids.PhotoId;
@@ -22,14 +23,14 @@ public class PhotoService {
     @Autowired
     private final PhotoRepository photoRepository;
     @Autowired
-    private PhotoUploadService photoUploadService;
+    private PhotoUploadResource photoUploadResource;
 
     public PhotoService(PhotoFactory photoFactory,
                         PhotoRepository photoRepository,
-                        PhotoUploadService photoUploadService) {
+                        PhotoUploadResource photoUploadResource) {
         this.photoFactory = photoFactory;
         this.photoRepository = photoRepository;
-        this.photoUploadService = photoUploadService;
+        this.photoUploadResource = photoUploadResource;
     }
 
     public Optional<PhotoDto> findPhotoBy(PhotoId id) {
@@ -41,7 +42,7 @@ public class PhotoService {
     }
 
     public Optional<PhotoDto> save(MultipartFile photoFile, PhotoRequestMetadata photoRequestMetadata) {
-        Optional<PhotoUploadDetails> optionalPhotoUploadDetails = photoUploadService.upload(photoFile);
+        Optional<PhotoUploadDetails> optionalPhotoUploadDetails = photoUploadResource.upload(photoFile);
         if (optionalPhotoUploadDetails.isPresent()) {
             PhotoUploadDetails photoUploadDetails = optionalPhotoUploadDetails.get();
             Photo persistedPhoto = photoFactory.createNewPhoto(photoUploadDetails, photoRequestMetadata);

@@ -1,6 +1,7 @@
 package com.titaniumpanda.app.domain;
 
-import com.titaniumpanda.app.api.external.AwsPhotoUploadResourceImpl;
+import com.titaniumpanda.app.api.external.AwsPhotoUploadService;
+import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -11,9 +12,9 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PhotoUploadServiceTest {
+public class PhotoUploadResourceTest {
 
-    private final AwsPhotoUploadResourceImpl fileUploadResource = mock(AwsPhotoUploadResourceImpl.class);
+    private final AwsPhotoUploadService fileUploadResource = mock(AwsPhotoUploadService.class);
 
     @Test
     public void shouldReturnCreatedPhotoDtoOnSuccess() {
@@ -22,7 +23,7 @@ public class PhotoUploadServiceTest {
         String photoBaseUrl = "/thisIsWhereTheImageIsLocated";
         PhotoUploadDetails photoUploadDetails = new PhotoUploadDetails(photoThumbnailUrl, photoBaseUrl);
 
-        PhotoUploadService underTest = new PhotoUploadService(fileUploadResource);
+        PhotoUploadResource underTest = new PhotoUploadResource(fileUploadResource);
 
 
         when(fileUploadResource.uploadFile(photoFile)).thenReturn(Optional.of(photoUploadDetails));

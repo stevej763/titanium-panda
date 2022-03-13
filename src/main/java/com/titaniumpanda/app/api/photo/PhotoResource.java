@@ -1,7 +1,7 @@
 package com.titaniumpanda.app.api.photo;
 
 import com.titaniumpanda.app.domain.PhotoService;
-import com.titaniumpanda.app.domain.PhotoUploadService;
+import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,11 +25,11 @@ public class PhotoResource {
     @Autowired
     private final PhotoService photoService;
     @Autowired
-    private final PhotoUploadService photoUploadService;
+    private final PhotoUploadResource photoUploadResource;
 
-    public PhotoResource(PhotoService photoService, PhotoUploadService photoUploadService) {
+    public PhotoResource(PhotoService photoService, PhotoUploadResource photoUploadResource) {
         this.photoService = photoService;
-        this.photoUploadService = photoUploadService;
+        this.photoUploadResource = photoUploadResource;
     }
 
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
@@ -52,9 +52,9 @@ public class PhotoResource {
     public ResponseEntity<PhotoDto> addPhoto(PhotoRequestMetadata photoRequestMetadata, MultipartFile photo) {
         Optional<PhotoDto> response = photoService.save(photo, photoRequestMetadata);
         if (response.isPresent()) {
-            PhotoDto photoUploadDetails = response.get();
-            String resourceLocation = PHOTO_RESOURCE_URL + "/" + photoUploadDetails.getPhotoIdAsString();
-            return ResponseEntity.created(URI.create(resourceLocation)).body(photoUploadDetails);
+            PhotoDto photoDto = response.get();
+            String resourceLocation = PHOTO_RESOURCE_URL + "/" + photoDto.getPhotoIdAsString();
+            return ResponseEntity.created(URI.create(resourceLocation)).body(photoDto);
         } else {
             return ResponseEntity.internalServerError().build();
         }

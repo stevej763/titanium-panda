@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
-public interface FileUploadResource<T> {
+public interface FileUploader<T> {
 
     Optional<T> uploadFile(MultipartFile file);
 }

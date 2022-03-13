@@ -1,5 +1,6 @@
 package com.titaniumpanda.app.domain;
 
+import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 import com.titaniumpanda.app.domain.ids.CategoryId;
@@ -32,9 +33,9 @@ public class PhotoServiceTest {
     private static final String TITLE = "title";
     private final PhotoFactory photoFactory = mock(PhotoFactory.class);
     private final PhotoRepository photoRepository = mock(PhotoRepository.class);
-    private final PhotoUploadService photoUploadService = mock(PhotoUploadService.class);
+    private final PhotoUploadResource photoUploadResource = mock(PhotoUploadResource.class);
 
-    private final PhotoService underTest = new PhotoService(photoFactory, photoRepository, photoUploadService);
+    private final PhotoService underTest = new PhotoService(photoFactory, photoRepository, photoUploadResource);
 
     @Test
     public void shouldReturnPhotoDto() {
@@ -97,7 +98,7 @@ public class PhotoServiceTest {
         MockMultipartFile photoFile = new MockMultipartFile("photo", "photo".getBytes());
         PhotoUploadDetails photoUploadDetails = new PhotoUploadDetails(photoThumbnailUrl, photoBaseUrl);
 
-        when(photoUploadService.upload(photoFile)).thenReturn(Optional.of(photoUploadDetails));
+        when(photoUploadResource.upload(photoFile)).thenReturn(Optional.of(photoUploadDetails));
         when(photoFactory.createNewPhoto(photoUploadDetails, metadata)).thenReturn(photo);
         when(photoRepository.save(photo)).thenReturn(photo);
         when(photoFactory.convertToDto(photo)).thenReturn(photoDto);

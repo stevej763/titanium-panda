@@ -13,16 +13,16 @@ import java.io.InputStream;
 import java.util.Optional;
 
 
-public class PhotoS3Client {
+public class S3ClientDelegate {
 
-    Logger LOGGER = LoggerFactory.getLogger(PhotoS3Client.class);
+    Logger LOGGER = LoggerFactory.getLogger(S3ClientDelegate.class);
 
     private final String bucketName;
 
     @Autowired
     AmazonS3 s3Client;
 
-    public PhotoS3Client(String bucketName) {
+    public S3ClientDelegate(String bucketName) {
         this.bucketName = bucketName;
     }
 
@@ -31,7 +31,10 @@ public class PhotoS3Client {
         try {
             LOGGER.info("Attempting to put object with fileKey={} of size={} into bucket={} at location={}",
                     fileKey, fileSize, bucketName, s3Client.getRegion());
-            s3Client.putObject(new PutObjectRequest(bucketName, fileKey, inputStream, metadata));
+
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, inputStream, metadata);
+
+            s3Client.putObject(putObjectRequest);
         } catch (Exception e) {
             LOGGER.error("Error putting object..");
             LOGGER.error(e.getMessage());

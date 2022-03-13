@@ -1,6 +1,6 @@
 package com.titaniumpanda.app.api.external;
 
-import com.titaniumpanda.app.domain.FileUploadResource;
+import com.titaniumpanda.app.domain.FileUploader;
 import com.titaniumpanda.app.domain.IdService;
 import com.titaniumpanda.app.domain.PhotoUploadDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +10,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
-public class AwsPhotoUploadResourceImpl implements FileUploadResource<PhotoUploadDetails> {
+public class AwsPhotoUploadService implements FileUploader<PhotoUploadDetails> {
 
-    private IdService idService;
+    private final IdService idService;
     @Autowired
-    private PhotoS3Client photoS3Client;
+    private final S3ClientDelegate s3ClientDelegate;
 
-    public AwsPhotoUploadResourceImpl(IdService idService, PhotoS3Client photoS3Client) {
+    public AwsPhotoUploadService(IdService idService, S3ClientDelegate s3ClientDelegate) {
         this.idService = idService;
-        this.photoS3Client = photoS3Client;
+        this.s3ClientDelegate = s3ClientDelegate;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class AwsPhotoUploadResourceImpl implements FileUploadResource<PhotoUploa
             InputStream inputStream = file.getInputStream();
             String fileKey = idService.getNewS3UploadId().getId() + ".jpeg";
 
-            return photoS3Client.upload(fileKey, inputStream, file.getSize());
+            return s3ClientDelegate.upload(fileKey, inputStream, file.getSize());
         } catch (IOException e) {
             return Optional.empty();
         }

@@ -1,7 +1,7 @@
 package com.titaniumpanda.app.api.photo;
 
 import com.titaniumpanda.app.domain.PhotoService;
-import com.titaniumpanda.app.domain.PhotoUploadService;
+import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.domain.ids.CategoryId;
 import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.junit.jupiter.api.Test;
@@ -32,8 +32,8 @@ public class PhotoResourceTest {
     private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
     private final PhotoService photoService = mock(PhotoService.class);
-    private final PhotoUploadService photoUploadService = mock(PhotoUploadService.class);
-    private final PhotoResource underTest = new PhotoResource(photoService, photoUploadService);
+    private final PhotoUploadResource photoUploadResource = mock(PhotoUploadResource.class);
+    private final PhotoResource underTest = new PhotoResource(photoService, photoUploadResource);
     private final MockMultipartFile mockPhotoFile = new MockMultipartFile("Hello", "hello".getBytes());
     private final PhotoRequestMetadata photoRequestMetadata = new PhotoRequestMetadata(TITLE, PHOTO_DESCRIPTION, categoryIds);
 

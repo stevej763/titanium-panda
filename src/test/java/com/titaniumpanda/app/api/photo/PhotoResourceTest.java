@@ -2,7 +2,6 @@ package com.titaniumpanda.app.api.photo;
 
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.domain.PhotoService;
-import com.titaniumpanda.app.domain.ids.CategoryId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

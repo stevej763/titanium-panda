@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -25,7 +26,7 @@ public class CategoryResource {
     }
 
     @GetMapping(value = "{categoryId}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoryDto> getCategory(@PathVariable("categoryId") String categoryId) {
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable("categoryId") UUID categoryId) {
         Optional<CategoryDto> categoryDto = categoryService.findBy(categoryId);
         if (categoryDto.isPresent()) {
             return ResponseEntity.ok(categoryDto.get());

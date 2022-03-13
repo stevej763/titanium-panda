@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
@@ -20,8 +21,8 @@ public class CategoryService {
         this.categoryFactory = categoryFactory;
     }
 
-    public Optional<CategoryDto> findBy(String id) {
-        return categoryRepository.findByCategoryId(id).map(categoryFactory::convertToDto);
+    public Optional<CategoryDto> findBy(UUID id) {
+        return categoryRepository.findById(id).map(categoryFactory::convertToDto);
     }
 
     public List<CategoryDto> findAll() {

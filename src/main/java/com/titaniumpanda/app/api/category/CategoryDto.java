@@ -5,14 +5,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.UUID;
+
 public class CategoryDto {
 
-    private final String categoryId;
+    private final UUID categoryId;
     private final String categoryName;
     private final String categoryThumbnailUrl;
     private final String categoryDescription;
 
-    public CategoryDto(@JsonProperty("categoryId") String categoryId,
+    public CategoryDto(@JsonProperty("categoryId") UUID categoryId,
                        @JsonProperty("categoryName") String categoryName,
                        @JsonProperty("categoryThumbnailUrl") String categoryThumbnailUrl,
                        @JsonProperty("categoryDescription") String categoryDescription) {
@@ -22,7 +24,7 @@ public class CategoryDto {
         this.categoryDescription = categoryDescription;
     }
 
-    public String getCategoryId() {
+    public UUID getCategoryId() {
         return categoryId;
     }
 

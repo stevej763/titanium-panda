@@ -3,24 +3,29 @@ package com.titaniumpanda.app.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.UUID;
 
 @Document
 public class Category {
 
-    private final String categoryId;
+    @Id
+    private final UUID categoryId;
+
     private final String categoryName;
     private final String categoryThumbnailUrl;
     private final String categoryDescription;
 
-    public Category(String categoryId, String categoryName, String categoryThumbnailUrl, String categoryDescription) {
+    public Category(UUID categoryId, String categoryName, String categoryThumbnailUrl, String categoryDescription) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.categoryThumbnailUrl = categoryThumbnailUrl;
         this.categoryDescription = categoryDescription;
     }
 
-    public String getCategoryId() {
+    public UUID getCategoryId() {
         return categoryId;
     }
 

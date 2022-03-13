@@ -2,7 +2,6 @@ package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
-import com.titaniumpanda.app.domain.ids.CategoryId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

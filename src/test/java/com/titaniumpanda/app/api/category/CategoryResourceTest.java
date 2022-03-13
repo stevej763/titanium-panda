@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,11 +19,11 @@ public class CategoryResourceTest {
 
     private final CategoryService categoryService = mock(CategoryService.class);
     private final CategoryResource underTest = new CategoryResource(categoryService);
-    private final String id = "1";
+    private final UUID id = UUID.randomUUID();
 
     @Test
     public void shouldReturnCategory() {
-        CategoryDto categoryDto = new CategoryDto("id", "title", "thumbnailUrl", "description");
+        CategoryDto categoryDto = new CategoryDto(id, "title", "thumbnailUrl", "description");
 
         when(categoryService.findBy(id)).thenReturn(Optional.of(categoryDto));
 
@@ -43,10 +44,13 @@ public class CategoryResourceTest {
 
     @Test
     public void shouldReturnListOfCatergories() {
+        UUID categoryId1 = UUID.randomUUID();
+        UUID categoryId2 = UUID.randomUUID();
+        UUID categoryId3 = UUID.randomUUID();
         List<CategoryDto> categoryDtos = List.of(
-                new CategoryDto("1", "title", "thumbnailUrl", "description"),
-                new CategoryDto("2", "title", "thumbnailUrl", "description"),
-                new CategoryDto("3", "title", "thumbnailUrl", "description"));
+                new CategoryDto(categoryId1, "title", "thumbnailUrl", "description"),
+                new CategoryDto(categoryId2, "title", "thumbnailUrl", "description"),
+                new CategoryDto(categoryId3, "title", "thumbnailUrl", "description"));
 
         when(categoryService.findAll()).thenReturn(categoryDtos);
 

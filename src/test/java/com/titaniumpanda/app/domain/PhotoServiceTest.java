@@ -3,8 +3,6 @@ package com.titaniumpanda.app.domain;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
-import com.titaniumpanda.app.domain.ids.CategoryId;
-import com.titaniumpanda.app.domain.ids.PhotoId;
 import com.titaniumpanda.app.repository.PhotoRepository;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
@@ -13,6 +11,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,9 +21,9 @@ import static org.mockito.Mockito.when;
 
 public class PhotoServiceTest {
 
-    private static final PhotoId PHOTO_ID = new PhotoId();
-    private static final CategoryId CATEGORY_ID = new CategoryId();
-    private static final List<CategoryId> CATEGORY_IDS = List.of(CATEGORY_ID);
+    private static final UUID PHOTO_ID = UUID.randomUUID();
+    private static final UUID CATEGORY_ID = UUID.randomUUID();
+    private static final List<UUID> CATEGORY_IDS = List.of(CATEGORY_ID);
     private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.now();
     private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.now();
@@ -54,9 +53,9 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldReturnSetOfPhotoDtoObjects() {
-        PhotoId photoId1 = new PhotoId();
-        PhotoId photoId2 = new PhotoId();
-        PhotoId photoId3 = new PhotoId();
+        UUID photoId1 = UUID.randomUUID();
+        UUID photoId2 = UUID.randomUUID();
+        UUID photoId3 = UUID.randomUUID();
         Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);

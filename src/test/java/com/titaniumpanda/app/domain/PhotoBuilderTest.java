@@ -1,9 +1,9 @@
 package com.titaniumpanda.app.domain;
 
-import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,7 +17,7 @@ public class PhotoBuilderTest {
         PhotoBuilder underTest = new PhotoBuilder();
 
         LocalDateTime createdDateTime = LocalDateTime.now();
-        PhotoId photoId = new PhotoId();
+        UUID photoId = UUID.randomUUID();
         String title = "title";
         String thumbnail = "thumbnail";
         String description = "description";

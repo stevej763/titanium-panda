@@ -3,7 +3,6 @@ package com.titaniumpanda.app.domain;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
-import com.titaniumpanda.app.domain.ids.PhotoId;
 import com.titaniumpanda.app.repository.PhotoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PhotoService {
@@ -33,7 +33,7 @@ public class PhotoService {
         this.photoUploadResource = photoUploadResource;
     }
 
-    public Optional<PhotoDto> findPhotoBy(PhotoId id) {
+    public Optional<PhotoDto> findPhotoBy(UUID id) {
        return photoRepository.findById(id).map(photoFactory::convertToDto);
     }
 

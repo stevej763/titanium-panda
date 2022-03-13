@@ -1,23 +1,21 @@
 package com.titaniumpanda.app.domain;
 
-import com.titaniumpanda.app.domain.ids.CategoryId;
-import com.titaniumpanda.app.domain.ids.PhotoId;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class PhotoBuilder {
 
-    private PhotoId photoId;
+    private UUID photoId;
     private String title;
     private String photoThumbnailUrl;
     private String photoDescription;
     private LocalDateTime createdDateTime;
     private LocalDateTime modifiedDateTime;
     private String photoBaseUrl;
-    private List<CategoryId> categories;
+    private List<UUID> categories;
 
-    public PhotoBuilder setPhotoId(PhotoId photoId) {
+    public PhotoBuilder setPhotoId(UUID photoId) {
         this.photoId = photoId;
         return this;
     }
@@ -51,7 +49,7 @@ public class PhotoBuilder {
         return this;
     }
 
-    public PhotoBuilder setCategories(List<CategoryId> categories) {
+    public PhotoBuilder setCategories(List<UUID> categories) {
         this.categories = categories;
         return this;
     }

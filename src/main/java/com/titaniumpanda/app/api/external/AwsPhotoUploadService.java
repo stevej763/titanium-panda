@@ -25,7 +25,7 @@ public class AwsPhotoUploadService implements FileUploader<PhotoUploadDetails> {
     public Optional<PhotoUploadDetails> uploadFile(MultipartFile file) {
         try{
             InputStream inputStream = file.getInputStream();
-            String fileKey = idService.getNewS3UploadId().getId() + ".jpeg";
+            String fileKey = idService.createNewId() + ".jpeg";
 
             return s3ClientDelegate.upload(fileKey, inputStream, file.getSize());
         } catch (IOException e) {

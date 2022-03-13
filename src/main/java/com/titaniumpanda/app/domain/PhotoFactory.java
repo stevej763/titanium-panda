@@ -4,6 +4,7 @@ import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class PhotoFactory {
 
@@ -26,7 +27,8 @@ public class PhotoFactory {
 
     public Photo createNewPhoto(PhotoUploadDetails photoUploadDetails, PhotoRequestMetadata photoRequestMetadata) {
         LocalDateTime createdDateTime = LocalDateTime.now();
-        return new Photo(idService.getNewPhotoId(),
+        UUID newPhotoId = idService.createNewId();
+        return new Photo(newPhotoId,
                 photoRequestMetadata.getTitle(),
                 photoUploadDetails.getThumbnailUrl(),
                 photoRequestMetadata.getDescription(),

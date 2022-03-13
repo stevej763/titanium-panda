@@ -1,9 +1,8 @@
 package com.titaniumpanda.app.api.photo;
 
-import com.titaniumpanda.app.domain.PhotoService;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
+import com.titaniumpanda.app.domain.PhotoService;
 import com.titaniumpanda.app.domain.ids.CategoryId;
-import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,9 +22,9 @@ import static org.mockito.Mockito.when;
 
 public class PhotoResourceTest {
 
-    private static final PhotoId PHOTO_ID = new PhotoId();
-    private static final CategoryId CATEGORY_ID = new CategoryId();
-    private final List<CategoryId> categoryIds = List.of(CATEGORY_ID);
+    private static final UUID PHOTO_ID = UUID.randomUUID();
+    private static final UUID CATEGORY_ID = UUID.randomUUID();
+    private final List<UUID> categoryIds = List.of(CATEGORY_ID);
     private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.now();
     private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.now();
@@ -60,10 +60,13 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnListOfPhotos() {
+        UUID photoId1 = UUID.randomUUID();
+        UUID photoId2 = UUID.randomUUID();
+        UUID photoId3 = UUID.randomUUID();
         List<PhotoDto> photoDtos = List.of(
-                new PhotoDto(new PhotoId(), "title", "photoUrl", "description", null, null, null, null),
-                new PhotoDto(new PhotoId(), "title", "photoUrl", "description", null, null, null, null),
-                new PhotoDto(new PhotoId(), "title", "photoUrl", "description", null, null, null, null));
+                new PhotoDto(photoId1, "title", "photoUrl", "description", null, null, null, null),
+                new PhotoDto(photoId2, "title", "photoUrl", "description", null, null, null, null),
+                new PhotoDto(photoId3, "title", "photoUrl", "description", null, null, null, null));
 
         when(photoService.findAll()).thenReturn(photoDtos);
 

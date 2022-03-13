@@ -1,8 +1,6 @@
 package com.titaniumpanda.app.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.titaniumpanda.app.domain.ids.CategoryId;
-import com.titaniumpanda.app.domain.ids.PhotoId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,12 +9,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Document
 public class Photo {
 
     @Id
-    private final PhotoId photoId;
+    private final UUID photoId;
 
     private final String title;
     private final String photoThumbnailUrl;
@@ -24,16 +23,16 @@ public class Photo {
     private final LocalDateTime createdDateTime;
     private final LocalDateTime modifiedDateTime;
     private final String photoBaseUrl;
-    private final List<CategoryId> categoryIds;
+    private final List<UUID> categoryIds;
 
-    public Photo(@JsonProperty("photoId") PhotoId photoId,
+    public Photo(@JsonProperty("photoId") UUID photoId,
                  @JsonProperty("title") String title,
                  @JsonProperty("photoThumbnailUrl") String photoThumbnailUrl,
                  @JsonProperty("description") String description,
                  @JsonProperty("createdDateTime") LocalDateTime createdDateTime,
                  @JsonProperty("modifiedDateTime") LocalDateTime modifiedDateTime,
                  @JsonProperty("photoBaseUrl") String photoBaseUrl,
-                 @JsonProperty("categoryIds") List<CategoryId> categoryIds) {
+                 @JsonProperty("categoryIds") List<UUID> categoryIds) {
         this.photoId = photoId;
         this.title = title;
         this.photoThumbnailUrl = photoThumbnailUrl;
@@ -44,7 +43,7 @@ public class Photo {
         this.categoryIds = categoryIds;
     }
 
-    public PhotoId getPhotoId() {
+    public UUID getPhotoId() {
         return photoId;
     }
 
@@ -72,7 +71,7 @@ public class Photo {
         return photoBaseUrl;
     }
 
-    public List<CategoryId> getCategoryIds() {
+    public List<UUID> getCategoryIds() {
         return categoryIds;
     }
 

@@ -1,8 +1,7 @@
 package com.titaniumpanda.app.api.photo;
 
-import com.titaniumpanda.app.domain.PhotoService;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
-import com.titaniumpanda.app.domain.ids.PhotoId;
+import com.titaniumpanda.app.domain.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.titaniumpanda.app.api.photo.PhotoResource.PHOTO_RESOURCE_URL;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -33,7 +33,7 @@ public class PhotoResource {
     }
 
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<PhotoDto> getPhoto(@PathVariable("id") PhotoId id) {
+    public ResponseEntity<PhotoDto> getPhoto(@PathVariable("id") UUID id) {
         Optional<PhotoDto> photoDto = photoService.findPhotoBy(id);
         if (photoDto.isPresent()) {
             return ResponseEntity.ok().body(photoDto.get());

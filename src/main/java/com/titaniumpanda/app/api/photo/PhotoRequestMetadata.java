@@ -1,22 +1,22 @@
 package com.titaniumpanda.app.api.photo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.titaniumpanda.app.domain.ids.CategoryId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PhotoRequestMetadata {
 
     private final String title;
     private final String description;
-    private final List<CategoryId> categoryIds;
+    private final List<UUID> categoryIds;
 
     public PhotoRequestMetadata(@JsonProperty("title") String title,
                                 @JsonProperty("photoDescription") String description,
-                                @JsonProperty("categoryIds") List<CategoryId> categoryIds) {
+                                @JsonProperty("categoryIds") List<UUID> categoryIds) {
         this.title = title;
         this.description = description;
         this.categoryIds = categoryIds;
@@ -30,7 +30,7 @@ public class PhotoRequestMetadata {
         return description;
     }
 
-    public List<CategoryId> getCategoryIds() {
+    public List<UUID> getCategoryIds() {
         return categoryIds;
     }
 

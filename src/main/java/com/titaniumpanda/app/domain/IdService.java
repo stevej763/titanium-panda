@@ -1,18 +1,13 @@
 package com.titaniumpanda.app.domain;
 
-import com.titaniumpanda.app.domain.ids.PhotoId;
-import com.titaniumpanda.app.domain.ids.S3UploadId;
+import java.util.UUID;
 
 public class IdService {
 
     public IdService() {
     }
 
-    public PhotoId getNewPhotoId() {
-        return new PhotoId();
-    }
-
-    public S3UploadId getNewS3UploadId() {
-        return new S3UploadId();
+    public UUID createNewId() {
+        return UUID.randomUUID();
     }
 }

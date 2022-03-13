@@ -55,4 +55,8 @@ public class PhotoService {
             return Optional.empty();
         }
     }
+
+    public List<PhotoDto> findByCategoryId(UUID categoryId) {
+        return photoRepository.findByCategoryId(categoryId).stream().map(photoFactory::convertToDto).collect(Collectors.toList());
+    }
 }

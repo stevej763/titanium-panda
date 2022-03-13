@@ -47,6 +47,11 @@ public class PhotoResource {
         List<PhotoDto> photos = photoService.findAll();
         return ResponseEntity.ok().body(photos);
     }
+    @GetMapping(value = "/category/{categoryId}")
+    public ResponseEntity<List<PhotoDto>> getPhotosForCategory(@PathVariable("categoryId") UUID categoryId) {
+        List<PhotoDto> photosForCategory = photoService.findByCategoryId(categoryId);
+        return ResponseEntity.ok().body(photosForCategory);
+    }
 
     @PostMapping(value = "/upload", consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<PhotoDto> addPhoto(PhotoRequestMetadata photoRequestMetadata, MultipartFile photo) {
@@ -59,4 +64,5 @@ public class PhotoResource {
             return ResponseEntity.internalServerError().build();
         }
     }
+
 }

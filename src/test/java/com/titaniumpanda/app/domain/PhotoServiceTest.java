@@ -34,6 +34,16 @@ public class PhotoServiceTest {
     private final PhotoRepository photoRepository = mock(PhotoRepository.class);
     private final PhotoUploadResource photoUploadResource = mock(PhotoUploadResource.class);
 
+    private final UUID photoId1 = UUID.randomUUID();
+    private final UUID photoId2 = UUID.randomUUID();
+    private final UUID photoId3 = UUID.randomUUID();
+    private final Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+
     private final PhotoService underTest = new PhotoService(photoFactory, photoRepository, photoUploadResource);
 
     @Test
@@ -52,26 +62,12 @@ public class PhotoServiceTest {
     }
 
     @Test
-    public void shouldReturnSetOfPhotoDtoObjects() {
-        UUID photoId1 = UUID.randomUUID();
-        UUID photoId2 = UUID.randomUUID();
-        UUID photoId3 = UUID.randomUUID();
-        Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        List<Photo> photos = List.of(
-                photo1,
-                photo2,
-                photo3
-        );
+    public void shouldReturnListOfPhotoDtoObjects() {
+        List<Photo> photos = getPhotos();
         PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        List<PhotoDto> photoDtos = List.of(
-                photoDto1,
-                photoDto2,
-                photoDto3
-        );
+        List<PhotoDto> photoDtos = getPhotoDtos();
 
         when(photoRepository.findAll()).thenReturn(photos);
         when(photoFactory.convertToDto(photo1)).thenReturn(photoDto1);
@@ -79,6 +75,29 @@ public class PhotoServiceTest {
         when(photoFactory.convertToDto(photo3)).thenReturn(photoDto3);
 
         assertThat(underTest.findAll(), is(photoDtos));
+    }
+
+    private List<PhotoDto> getPhotoDtos() {
+        return List.of(photoDto1, photoDto2, photoDto3);
+    }
+
+    private List<Photo> getPhotos() {
+        return List.of(photo1, photo2, photo3);
+    }
+
+    @Test
+    public void shouldReturnPhotoDtosForCategory() {
+        List<Photo> photos = getPhotos();
+        List<PhotoDto> photoDtos = getPhotoDtos();
+
+        when(photoRepository.findByCategoryId(CATEGORY_ID)).thenReturn(photos);
+        when(photoFactory.convertToDto(photo1)).thenReturn(photoDto1);
+        when(photoFactory.convertToDto(photo2)).thenReturn(photoDto2);
+        when(photoFactory.convertToDto(photo3)).thenReturn(photoDto3);
+
+        List<PhotoDto> result = underTest.findByCategoryId(CATEGORY_ID);
+
+        assertThat(result, is(photoDtos));
     }
 
     @Test

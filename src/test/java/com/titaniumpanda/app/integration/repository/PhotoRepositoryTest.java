@@ -24,6 +24,9 @@ public class PhotoRepositoryTest extends AbstractMongoRepositoryTest {
     private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
     private final UUID photoId1 = UUID.randomUUID();
+    private final UUID photoId2 = UUID.randomUUID();
+    private final UUID photoId3 = UUID.randomUUID();
+    private final UUID photoId4 = UUID.randomUUID();
 
     @Autowired
     PhotoRepository photoRepository;
@@ -47,8 +50,6 @@ public class PhotoRepositoryTest extends AbstractMongoRepositoryTest {
 
     @Test
     public void shouldFindListOfPhotos() {
-        UUID photoId2 = UUID.randomUUID();
-        UUID photoId3 = UUID.randomUUID();
         Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, List.of(CATEGORY_ID));
         Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, List.of(CATEGORY_ID));
         Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, List.of(CATEGORY_ID));
@@ -68,5 +69,24 @@ public class PhotoRepositoryTest extends AbstractMongoRepositoryTest {
     public void shouldReturnEmptyListWhenNoPhotoFound() {
         List<Photo> result = photoRepository.findAll();
         assertThat(result, is(emptyList()));
+    }
+
+    @Test
+    public void shouldFindListOfPhotosForCategory() {
+        Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, List.of(CATEGORY_ID));
+        Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, List.of(CATEGORY_ID));
+        Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, List.of(CATEGORY_ID));
+        Photo photo4 = new Photo(photoId4, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+
+        mongoTestTemplate.save(photo1);
+        mongoTestTemplate.save(photo2);
+        mongoTestTemplate.save(photo3);
+        mongoTestTemplate.save(photo4);
+
+        List<Photo> result = photoRepository.findByCategoryId(CATEGORY_ID);
+
+        List<Photo> expected = List.of(photo1, photo2, photo3);
+
+        assertThat(result, is(expected));
     }
 }

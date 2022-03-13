@@ -9,11 +9,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {TitaniumPandaApplication.class, TestMongoDbConfiguration.class})
-@ActiveProfiles("test")
 public abstract class AbstractWebTest {
 
     protected static String collectionName = "photo";

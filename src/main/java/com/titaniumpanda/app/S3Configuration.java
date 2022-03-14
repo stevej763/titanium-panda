@@ -43,7 +43,7 @@ public class S3Configuration {
         LOGGER.info("Service endpoint={}", serviceEndpoint);
         return new AwsClientBuilder.EndpointConfiguration(
                 serviceEndpoint,
-                "eu-west-1");
+                environment.getProperty("aws-region"));
     }
 
 }

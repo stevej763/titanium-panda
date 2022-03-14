@@ -1,0 +1,46 @@
+services:
+  app:
+    image: titanium_panda:dev
+    build: .
+    ports:
+      - "3000:8080"
+    links:
+      - "mongo:panda-docker-mongo"
+      - "s3:panda-docker-s3"
+    networks:
+      - titanium
+  mongo:
+    image: "mongo:latest"
+    ports:
+      - "27018:27017"
+    networks:
+      - titanium
+  s3:
+    image: "minio/minio"
+    ports:
+      - "9000:9000"
+      - "9100:9100"
+    networks:
+      - titanium
+    environment:
+      MINIO_ROOT_USER: "admin"
+      MINIO_ROOT_PASSWORD: "Passw0rd"
+    command: server --address ":9000" --console-address ":9100" /data
+  minio-console:
+    links:
+      - "s3:panda-docker-s3"
+    image: minio/mc
+    networks:
+      - titanium
+    depends_on:
+      - s3
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add s3 http://s3:9000 admin Passw0rd;
+      /usr/bin/mc mb s3/panda-docker-bucket;
+      /usr/bin/mc policy set public s3/panda-docker-bucket;
+      exit 0;
+      "
+networks:
+  titanium:
+    name: titanium-panda-dev

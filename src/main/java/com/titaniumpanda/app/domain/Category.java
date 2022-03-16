@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ public class Category {
 
     @Id
     private final UUID categoryId;
-
+    @Indexed(unique=true)
     private final String categoryName;
     private final String categoryDescription;
     private final LocalDateTime createdDateTime;

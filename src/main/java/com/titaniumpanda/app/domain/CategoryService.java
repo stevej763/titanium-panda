@@ -2,6 +2,7 @@ package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.category.CategoryDto;
 import com.titaniumpanda.app.api.category.CategoryRequest;
+import com.titaniumpanda.app.api.category.CategoryUpdateRequest;
 import com.titaniumpanda.app.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,12 @@ public class CategoryService {
         this.categoryFactory = categoryFactory;
     }
 
-    public Optional<CategoryDto> findBy(UUID id) {
+    public Optional<CategoryDto> findById(UUID id) {
         return categoryRepository.findById(id).map(categoryFactory::convertToDto);
+    }
+
+    public Optional<CategoryDto> findByName(String categoryName) {
+        return categoryRepository.findByCategoryName(categoryName).map(categoryFactory::convertToDto);
     }
 
     public List<CategoryDto> findAll() {
@@ -40,5 +45,17 @@ public class CategoryService {
 
         LOGGER.info("new category saved createdDateTime={} categoryId={} categoryName={}", result.getCreatedDateTime(), result.getCategoryId(), result.getCategoryName());
         return Optional.of(categoryFactory.convertToDto(result));
+    }
+
+    public Optional<CategoryDto> update(CategoryUpdateRequest categoryUpdateRequest) {
+        UUID categoryId = UUID.fromString(categoryUpdateRequest.getCategoryId());
+        Optional<Category> existingCategory = categoryRepository.findById(categoryId);
+        if(existingCategory.isPresent()) {
+            Category updatedCategory = categoryFactory.updateCategory(existingCategory.get(), categoryUpdateRequest);
+            Category savedCategory = categoryRepository.save(updatedCategory);
+            return Optional.of(categoryFactory.convertToDto(savedCategory));
+        } else {
+            return Optional.empty();
+        }
     }
 }

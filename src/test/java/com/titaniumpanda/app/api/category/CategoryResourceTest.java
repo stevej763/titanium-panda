@@ -2,7 +2,6 @@ package com.titaniumpanda.app.api.category;
 
 import com.titaniumpanda.app.domain.CategoryService;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
@@ -16,14 +15,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 public class CategoryResourceTest {
 
     private final CategoryService categoryService = mock(CategoryService.class);
     private final CategoryResource underTest = new CategoryResource(categoryService);
     private final UUID id = UUID.randomUUID();
-    private final String categoryName = "title";
+    private final String categoryName = "name";
     private final String categoryDescription = "description";
     private final LocalDateTime createdDateTime = LocalDateTime.now();
     private final LocalDateTime modifiedDateTime = LocalDateTime.now();
@@ -32,18 +31,29 @@ public class CategoryResourceTest {
     public void shouldReturnCategory() {
         CategoryDto categoryDto = new CategoryDto(id, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
 
-        when(categoryService.findBy(id)).thenReturn(Optional.of(categoryDto));
+        when(categoryService.findById(id)).thenReturn(Optional.of(categoryDto));
 
-        ResponseEntity<CategoryDto> result = underTest.getCategory(id);
+        ResponseEntity<CategoryDto> result = underTest.getCategoryById(id);
+
+        assertThat(result.getBody(), is(categoryDto));
+    }
+
+    @Test
+    public void shouldReturnCategoryFromName() {
+        CategoryDto categoryDto = new CategoryDto(id, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+
+        when(categoryService.findByName(categoryName)).thenReturn(Optional.of(categoryDto));
+
+        ResponseEntity<CategoryDto> result = underTest.getCategoryByName(categoryName);
 
         assertThat(result.getBody(), is(categoryDto));
     }
 
     @Test
     public void shouldReturnEmptyResponseIfNoCategoryFound() {
-        when(categoryService.findBy(id)).thenReturn(Optional.empty());
+        when(categoryService.findById(id)).thenReturn(Optional.empty());
 
-        ResponseEntity<CategoryDto> result = underTest.getCategory(id);
+        ResponseEntity<CategoryDto> result = underTest.getCategoryById(id);
 
         assertThat(result.hasBody(), is(false));
         assertThat(result.getStatusCode(), is(NO_CONTENT));
@@ -77,29 +87,54 @@ public class CategoryResourceTest {
 
     @Test
     public void shouldReturnSavedCategoryOnSuccessfulPost() {
-        CategoryDto categoryDto = new CategoryDto(id, "title", "description", createdDateTime, modifiedDateTime);
-        CategoryRequest categoryRequest = new CategoryRequest("category name", "category description");
+        CategoryDto categoryDto = new CategoryDto(id, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        CategoryRequest categoryRequest = new CategoryRequest(categoryName, categoryDescription);
 
         when(categoryService.save(categoryRequest)).thenReturn(Optional.of(categoryDto));
 
-        ResponseEntity<CategoryDto> result = underTest.addPhoto(categoryRequest);
+        ResponseEntity<CategoryDto> result = underTest.addCategory(categoryRequest);
 
         URI expectedLocation = URI.create("api/category/" + categoryDto.getCategoryId());
 
-        assertThat(result.getStatusCode(), is(HttpStatus.CREATED));
+        assertThat(result.getStatusCode(), is(CREATED));
         assertThat(result.getBody(), is(categoryDto));
         assertThat(result.getHeaders().getLocation(), is(expectedLocation));
     }
 
     @Test
     public void shouldReturnErrorOnFailureToSaveNewCategory() {
-        CategoryRequest categoryRequest = new CategoryRequest("category name", "category description");
+        CategoryRequest categoryRequest = new CategoryRequest(categoryName, categoryDescription);
 
         when(categoryService.save(categoryRequest)).thenReturn(Optional.empty());
 
-        ResponseEntity<CategoryDto> result = underTest.addPhoto(categoryRequest);
+        ResponseEntity<CategoryDto> result = underTest.addCategory(categoryRequest);
 
-        assertThat(result.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(result.getStatusCode(), is(INTERNAL_SERVER_ERROR));
         assertThat(result.hasBody(), is(false));
+    }
+
+    @Test
+    public void shouldReturnUpdatedCategoryOnDetailChange() {
+        CategoryUpdateRequest categoryUpdateRequest = new CategoryUpdateRequest(id.toString(), categoryName, categoryDescription);
+        CategoryDto categoryDto = new CategoryDto(id, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+
+        when(categoryService.update(categoryUpdateRequest)).thenReturn(Optional.of(categoryDto));
+
+        ResponseEntity<CategoryDto> result = underTest.updateCategory(categoryUpdateRequest);
+
+        assertThat(result.getBody(), is(categoryDto));
+        assertThat(result.getStatusCode(), is(OK));
+    }
+
+    @Test
+    public void shouldReturnErrorIfCategoryDoesNotExist() {
+        CategoryUpdateRequest categoryUpdateRequest = new CategoryUpdateRequest(id.toString(), categoryName, categoryDescription);
+
+        when(categoryService.update(categoryUpdateRequest)).thenReturn(Optional.empty());
+
+        ResponseEntity<CategoryDto> result = underTest.updateCategory(categoryUpdateRequest);
+
+        assertThat(result.hasBody(), is(false));
+        assertThat(result.getStatusCode(), is(BAD_REQUEST));
     }
 }

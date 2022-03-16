@@ -2,6 +2,7 @@ package com.titaniumpanda.app.integration.repository;
 
 import com.titaniumpanda.app.domain.Photo;
 import com.titaniumpanda.app.repository.PhotoRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,6 +31,11 @@ public class PhotoRepositoryTest extends AbstractMongoRepositoryTest {
 
     @Autowired
     PhotoRepository photoRepository;
+
+    @BeforeAll
+    static void beforeAll() {
+        collectionName = "photo";
+    }
 
     @Test
     public void shouldFindPhotoById() {

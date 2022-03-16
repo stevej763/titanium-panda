@@ -13,7 +13,7 @@ public abstract class AbstractMongoRepositoryTest {
     @Autowired
     protected MongoTemplate mongoTestTemplate;
 
-    protected static final String collectionName ="photo";
+    protected static String collectionName ="test";
 
     @AfterEach
     void cleanDatabase() {

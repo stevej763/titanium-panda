@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.Index;
 
 @Configuration
 public class MongoDbConfiguration {
@@ -19,7 +21,9 @@ public class MongoDbConfiguration {
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(mongoClient(), environment.getProperty("mongodb.database"));
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient(), environment.getProperty("mongodb.database"));
+        mongoTemplate.indexOps("category").ensureIndex(new Index().on("categoryDescription", Sort.Direction.ASC));
+        return mongoTemplate;
     }
 
     public MongoClient mongoClient() {

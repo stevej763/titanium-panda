@@ -12,14 +12,14 @@ services:
   mongo:
     image: "mongo:latest"
     ports:
-      - "27018:27017"
+      - "27019:27017"
     networks:
       - titanium
   s3:
     image: "minio/minio"
     ports:
-      - "9000:9000"
-      - "9100:9100"
+      - "9005:9000"
+      - "9105:9100"
     networks:
       - titanium
     environment:

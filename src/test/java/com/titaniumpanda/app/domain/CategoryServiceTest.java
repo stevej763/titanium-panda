@@ -2,8 +2,8 @@ package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.category.CategoryDto;
 import com.titaniumpanda.app.api.category.CategoryRequest;
+import com.titaniumpanda.app.api.category.CategoryUpdateRequest;
 import com.titaniumpanda.app.repository.CategoryRepository;
-import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -21,20 +21,37 @@ public class CategoryServiceTest {
 
     private final CategoryRepository categoryRepository = mock(CategoryRepository.class);
     private final CategoryFactory categoryFactory = mock(CategoryFactory.class);
-    private final CategoryService underTest = new CategoryService(categoryRepository, categoryFactory);
+
     private final UUID categoryId = UUID.randomUUID();
     private final LocalDateTime createdDateTime = LocalDateTime.now();
     private final LocalDateTime modifiedDateTime = LocalDateTime.now();
+    private final String categoryName = "name";
+    private final String categoryDescription = "description";
+
+    private final CategoryService underTest = new CategoryService(categoryRepository, categoryFactory);
 
     @Test
-    public void shouldReturnCategoryDto() {
-        CategoryDto categoryDto = new CategoryDto(categoryId, "title", "description", createdDateTime, modifiedDateTime);
-        Category category = new Category(UUID.randomUUID(), "title", "description", createdDateTime, modifiedDateTime);
+    public void shouldReturnCategoryDtoFromId() {
+        CategoryDto categoryDto = new CategoryDto(categoryId, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        Category category = new Category(UUID.randomUUID(), categoryName, categoryDescription, createdDateTime, modifiedDateTime);
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         when(categoryFactory.convertToDto(category)).thenReturn(categoryDto);
 
-        Optional<CategoryDto> result = underTest.findBy(categoryId);
+        Optional<CategoryDto> result = underTest.findById(categoryId);
+
+        assertThat(result, is(Optional.of(categoryDto)));
+    }
+
+    @Test
+    public void shouldReturnCategoryDtoFromName() {
+        CategoryDto categoryDto = new CategoryDto(categoryId, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        Category category = new Category(UUID.randomUUID(), categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+
+        when(categoryRepository.findByCategoryName(categoryName)).thenReturn(Optional.of(category));
+        when(categoryFactory.convertToDto(category)).thenReturn(categoryDto);
+
+        Optional<CategoryDto> result = underTest.findByName(categoryName);
 
         assertThat(result, is(Optional.of(categoryDto)));
     }
@@ -42,7 +59,7 @@ public class CategoryServiceTest {
     @Test
     public void shouldReturnOptionalEmptyIfIdNotFound() {
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
-        assertThat(underTest.findBy(categoryId), is(Optional.empty()));
+        assertThat(underTest.findById(categoryId), is(Optional.empty()));
     }
 
     @Test
@@ -50,18 +67,18 @@ public class CategoryServiceTest {
         UUID categoryId1 = UUID.randomUUID();
         UUID categoryId2 = UUID.randomUUID();
         UUID categoryId3 = UUID.randomUUID();
-        Category category1 =new Category(categoryId1, "title", "description", createdDateTime, modifiedDateTime);
-        Category category2 =new Category(categoryId2, "title", "description", createdDateTime, modifiedDateTime);
-        Category category3 =new Category(categoryId3, "title", "description", createdDateTime, modifiedDateTime);
+        Category category1 =new Category(categoryId1, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        Category category2 =new Category(categoryId2, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        Category category3 =new Category(categoryId3, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
         List<Category> categories = List.of(
                 category1,
                 category2,
                 category3
         );
 
-        CategoryDto categoryDto1 =new CategoryDto(categoryId, "title", "description", createdDateTime, modifiedDateTime);
-        CategoryDto categoryDto2 =new CategoryDto(categoryId, "title", "description", createdDateTime, modifiedDateTime);
-        CategoryDto categoryDto3 =new CategoryDto(categoryId, "title", "description", createdDateTime, modifiedDateTime);
+        CategoryDto categoryDto1 =new CategoryDto(categoryId, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        CategoryDto categoryDto2 =new CategoryDto(categoryId, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        CategoryDto categoryDto3 =new CategoryDto(categoryId, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
         List<CategoryDto> categoryDtos = List.of(
                 categoryDto1,
                 categoryDto2,
@@ -83,9 +100,9 @@ public class CategoryServiceTest {
 
     @Test
     public void shouldReturnCategoryDtoOnSave() {
-        CategoryRequest categoryRequest = new CategoryRequest("category name", "category description");
-        CategoryDto categoryDto = new CategoryDto(categoryId, "title", "description", createdDateTime, modifiedDateTime);
-        Category category = new Category(UUID.randomUUID(), "title", "description", createdDateTime, modifiedDateTime);
+        CategoryRequest categoryRequest = new CategoryRequest(categoryName, categoryDescription);
+        CategoryDto categoryDto = new CategoryDto(categoryId, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        Category category = new Category(categoryId, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
 
         when(categoryFactory.createNewCategory(categoryRequest)).thenReturn(category);
         when(categoryRepository.save(category)).thenReturn(category);
@@ -93,6 +110,38 @@ public class CategoryServiceTest {
 
         Optional<CategoryDto> result = underTest.save(categoryRequest);
 
-        assertThat(result, Is.is(Optional.of(categoryDto)));
+        assertThat(result, is(Optional.of(categoryDto)));
+    }
+
+    @Test
+    public void shouldReturnCategoryDtoOnSuccessfulUpdate() {
+        String newDescription = "new description";
+        String newName = "new name";
+        CategoryUpdateRequest categoryUpdateRequest = new CategoryUpdateRequest(categoryId.toString(), newName, newDescription);
+        CategoryDto categoryDto = new CategoryDto(categoryId, newName, newDescription, createdDateTime, modifiedDateTime);
+        Category category = new Category(categoryId, categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+        Category updatedCategory = new Category(categoryId, newName, newDescription, createdDateTime, modifiedDateTime);
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        when(categoryFactory.updateCategory(category, categoryUpdateRequest)).thenReturn(updatedCategory);
+        when(categoryRepository.save(updatedCategory)).thenReturn(updatedCategory);
+        when(categoryFactory.convertToDto(updatedCategory)).thenReturn(categoryDto);
+
+        Optional<CategoryDto> result = underTest.update(categoryUpdateRequest);
+
+        assertThat(result, is(Optional.of(categoryDto)));
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenCategoryToUpdateDoesNotExist() {
+        String newDescription = "new description";
+        String newName = "new name";
+        CategoryUpdateRequest categoryUpdateRequest = new CategoryUpdateRequest(categoryId.toString(), newName, newDescription);
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
+
+        Optional<CategoryDto> result = underTest.update(categoryUpdateRequest);
+
+        assertThat(result, is(Optional.empty()));
     }
 }

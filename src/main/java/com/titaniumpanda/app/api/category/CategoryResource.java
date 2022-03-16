@@ -11,7 +11,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.titaniumpanda.app.api.category.CategoryResource.CATEGORY_RESOURCE_URL;
-import static org.springframework.http.MediaType.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping(CATEGORY_RESOURCE_URL)
@@ -33,6 +34,16 @@ public class CategoryResource {
             return ResponseEntity.ok(categoryDto.get());
         } else {
             return ResponseEntity.noContent().build();
+        }
+    }
+
+    @DeleteMapping(value = "/delete/{categoryId}")
+    public ResponseEntity<Boolean> deleteCategory(@PathVariable("categoryId") UUID categoryId) {
+        boolean result = categoryService.deleteCategory(categoryId);
+        if (result) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
         }
     }
 

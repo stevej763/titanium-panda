@@ -14,8 +14,7 @@ import java.util.UUID;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CategoryServiceTest {
 
@@ -143,5 +142,29 @@ public class CategoryServiceTest {
         Optional<CategoryDto> result = underTest.update(categoryUpdateRequest);
 
         assertThat(result, is(Optional.empty()));
+    }
+
+    @Test
+    public void shouldReturnTrueIfCategorySuccessfullyDeleted() {
+        Category category = new Category(UUID.randomUUID(), categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        Boolean result = underTest.deleteCategory(categoryId);
+
+        verify(categoryRepository).delete(category);
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void shouldReturnFalseIfCategoryNotFound() {
+        Category category = new Category(UUID.randomUUID(), categoryName, categoryDescription, createdDateTime, modifiedDateTime);
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
+
+        Boolean result = underTest.deleteCategory(categoryId);
+
+        verify(categoryRepository, never()).delete(category);
+        assertThat(result, is(false));
     }
 }

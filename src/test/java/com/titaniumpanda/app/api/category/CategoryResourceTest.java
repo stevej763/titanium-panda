@@ -60,6 +60,26 @@ public class CategoryResourceTest {
     }
 
     @Test
+    public void shouldReturnOKIfCategoryDeleted() {
+        when(categoryService.deleteCategory(id)).thenReturn(true);
+
+        ResponseEntity<Boolean> result = underTest.deleteCategory(id);
+
+        assertThat(result.hasBody(), is(false));
+        assertThat(result.getStatusCode(), is(OK));
+    }
+
+    @Test
+    public void shouldReturn404IfProblemDeletingCategory() {
+        when(categoryService.deleteCategory(id)).thenReturn(false);
+
+        ResponseEntity<Boolean> result = underTest.deleteCategory(id);
+
+        assertThat(result.hasBody(), is(false));
+        assertThat(result.getStatusCode(), is(BAD_REQUEST));
+    }
+
+    @Test
     public void shouldReturnListOfCatergories() {
         UUID categoryId1 = UUID.randomUUID();
         UUID categoryId2 = UUID.randomUUID();

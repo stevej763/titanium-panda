@@ -8,6 +8,7 @@ import com.titaniumpanda.app.api.category.CategoryDto;
 import com.titaniumpanda.app.api.category.CategoryRequest;
 import com.titaniumpanda.app.api.category.CategoryUpdateRequest;
 import com.titaniumpanda.app.domain.Category;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -57,6 +58,19 @@ public class CategoryResourceWebTest extends AbstractWebTest {
 
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(responseEntity.getBody(), is(serialisedExpectation));
+    }
+
+    @Test
+    public void shouldDeleteCategory() {
+        mongoTestTemplate.save(category, collectionName);
+
+        String deleteUrl = localhostWithPort + "/api/category/delete/" + categoryId;
+        restTemplate.delete(deleteUrl);
+
+        String checkDeletedUrl = localhostWithPort + "/api/category/id/" + categoryId;
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(checkDeletedUrl, String.class);
+
+        assertThat(responseEntity.getStatusCode(), Is.is(HttpStatus.NO_CONTENT));
     }
 
     @Test

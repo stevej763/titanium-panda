@@ -59,4 +59,15 @@ public class CategoryRepositoryTest extends AbstractMongoRepositoryTest {
 
         assertThat(result, is(updatedCategory));
     }
+
+    @Test
+    public void shouldDeleteCategory() {
+        Category category = new Category(categoryId, title, description, CREATED_DATE_TIME, MODIFIED_DATE_TIME);
+        mongoTestTemplate.save(category);
+        categoryRepository.delete(category);
+
+        Optional<Category> result = Optional.ofNullable(mongoTestTemplate.findById(categoryId, Category.class));
+
+        assertThat(result, is(Optional.empty()));
+    }
 }

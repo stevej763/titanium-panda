@@ -43,7 +43,8 @@ public class CategoryService {
         Category persistedCategory = categoryFactory.createNewCategory(categoryRequest);
         Category result = categoryRepository.save(persistedCategory);
 
-        LOGGER.info("new category saved createdDateTime={} categoryId={} categoryName={}", result.getCreatedDateTime(), result.getCategoryId(), result.getCategoryName());
+        LOGGER.info("category created createdDateTime={} categoryId={} categoryName={}",
+                result.getCreatedDateTime(), result.getCategoryId(), result.getCategoryName());
         return Optional.of(categoryFactory.convertToDto(result));
     }
 
@@ -53,9 +54,24 @@ public class CategoryService {
         if(existingCategory.isPresent()) {
             Category updatedCategory = categoryFactory.updateCategory(existingCategory.get(), categoryUpdateRequest);
             Category savedCategory = categoryRepository.save(updatedCategory);
+            LOGGER.info("category updated updatedTime={} categoryId={} categoryName={}",
+                    savedCategory.getModifiedDateTime(), savedCategory.getCategoryId(), savedCategory.getCategoryName());
             return Optional.of(categoryFactory.convertToDto(savedCategory));
         } else {
             return Optional.empty();
+        }
+    }
+
+    public Boolean deleteCategory(UUID categoryId) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if (category.isPresent()) {
+            Category categoryToDelete = category.get();
+            categoryRepository.delete(categoryToDelete);
+            LOGGER.info("category deleted categoryId={} categoryName={}",
+                    categoryToDelete.getCategoryId(), categoryToDelete.getCategoryName());
+            return true;
+        } else {
+            return false;
         }
     }
 }

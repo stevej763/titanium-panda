@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.titaniumpanda.app.api.photo.PhotoDto;
+import com.titaniumpanda.app.domain.Category;
 import com.titaniumpanda.app.domain.Photo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +20,10 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class PhotosByCategoryWebTest extends AbstractWebTest {
+public class PhotoCategoryWebTest extends AbstractWebTest {
 
     private static final UUID CATEGORY_ID = UUID.randomUUID();
+    private static final UUID PHOTO_ID = UUID.randomUUID();
     private static final List<UUID> CATEGORY_IDS = List.of(CATEGORY_ID);
     private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
@@ -38,6 +40,19 @@ public class PhotosByCategoryWebTest extends AbstractWebTest {
     void setUp() {
         objectMapper.registerModule(new JavaTimeModule()).setDateFormat(new StdDateFormat());
         localhostWithPort = "http://localhost:" + port;
+    }
+
+    @Test
+    public void shouldAddPhotoToCategory() {
+        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        Category category = new Category(CATEGORY_ID, "name", "description", CREATED_DATE_TIME, MODIFIED_DATE_TIME);
+
+        mongoTestTemplate.save(photo);
+        mongoTestTemplate.save(category);
+        String url = localhostWithPort + String.format("/api/photo/%s/category/add/%s", PHOTO_ID, CATEGORY_ID);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, null, String.class);
+
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test

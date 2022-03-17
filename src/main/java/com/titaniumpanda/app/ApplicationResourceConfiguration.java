@@ -1,8 +1,8 @@
 package com.titaniumpanda.app;
 
 import com.titaniumpanda.app.api.external.AwsPhotoUploadService;
-import com.titaniumpanda.app.api.external.S3ClientDelegate;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
+import com.titaniumpanda.app.api.external.S3ClientDelegate;
 import com.titaniumpanda.app.domain.*;
 import com.titaniumpanda.app.repository.CategoryRepository;
 import com.titaniumpanda.app.repository.PhotoRepository;
@@ -40,7 +40,7 @@ public class ApplicationResourceConfiguration {
 
     @Bean
     public PhotoService photoService() {
-        return new PhotoService(photoFactory(), photoRepository, photoUploadService());
+        return new PhotoService(photoFactory(), photoRepository, photoUploadService(), categoryService());
     }
 
     @Bean

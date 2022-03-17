@@ -4,6 +4,8 @@ import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PhotoFactory {
@@ -36,5 +38,19 @@ public class PhotoFactory {
                 createdDateTime,
                 photoUploadDetails.getPhotoUrl(),
                 photoRequestMetadata.getCategoryIds());
+    }
+
+    public Photo updatePhotoWithNewCategory(Photo photo, UUID categoryId) {
+        LocalDateTime modifiedDateTime = LocalDateTime.now();
+        List<UUID> categoryIds = new ArrayList<>(photo.getCategoryIds());
+        categoryIds.add(categoryId);
+        return new Photo(photo.getPhotoId(),
+                photo.getPhotoTitle(),
+                photo.getPhotoThumbnailUrl(),
+                photo.getDescription(),
+                photo.getCreatedDateTime(),
+                modifiedDateTime,
+                photo.getPhotoBaseUrl(),
+                categoryIds);
     }
 }

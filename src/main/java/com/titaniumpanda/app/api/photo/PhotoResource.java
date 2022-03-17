@@ -72,4 +72,15 @@ public class PhotoResource {
         }
     }
 
+    @PostMapping(value = "/{photoId}/category/add/{categoryId}")
+    public ResponseEntity<PhotoDto> addPhotoCategory(@PathVariable("photoId") UUID photoId,
+                                                     @PathVariable("categoryId") UUID categoryId) {
+        Optional<PhotoDto> response = photoService.addPhotoToCategory(photoId, categoryId);
+        if (response.isPresent()) {
+            PhotoDto photoDto = response.get();
+            return ResponseEntity.ok().body(photoDto);
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

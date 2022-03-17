@@ -1,6 +1,7 @@
 package com.titaniumpanda.app.api.photo;
 
 import com.titaniumpanda.app.domain.PhotoService;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +33,10 @@ public class PhotoResourceTest {
     private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
     private final PhotoService photoService = mock(PhotoService.class);
-    private final PhotoResource underTest = new PhotoResource(photoService);
     private final MockMultipartFile mockPhotoFile = new MockMultipartFile("Hello", "hello".getBytes());
     private final PhotoRequestMetadata photoRequestMetadata = new PhotoRequestMetadata(TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
+
+    private final PhotoResource underTest = new PhotoResource(photoService);
 
     @Test
     public void shouldReturnPhoto() {
@@ -89,9 +91,9 @@ public class PhotoResourceTest {
         UUID photoId2 = UUID.randomUUID();
         UUID photoId3 = UUID.randomUUID();
         List<PhotoDto> photoDtos = List.of(
-                new PhotoDto(photoId1, "title", "photoUrl", "description", CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
-                new PhotoDto(photoId2, "title", "photoUrl", "description", CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
-                new PhotoDto(photoId3, "title", "photoUrl", "description", CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS));
+                new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
+                new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
+                new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS));
 
         when(photoService.findByCategoryId(CATEGORY_ID)).thenReturn(photoDtos);
 
@@ -114,6 +116,16 @@ public class PhotoResourceTest {
         assertThat(result.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(result.getBody(), is(photoDto));
         assertThat(result.getHeaders().getLocation(), is(expectedLocation));
+    }
+
+
+    @Test
+    public void shouldReturnUpdatedPhotoWithNewCategory() {
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        when(photoService.addPhotoToCategory(PHOTO_ID, CATEGORY_ID)).thenReturn(Optional.of(photoDto));
+
+        ResponseEntity<PhotoDto> result = underTest.addPhotoCategory(PHOTO_ID, CATEGORY_ID);
+        assertThat(result.getBody(), Is.is(photoDto));
     }
 
     @Test

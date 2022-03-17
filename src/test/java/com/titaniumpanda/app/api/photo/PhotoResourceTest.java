@@ -1,6 +1,5 @@
 package com.titaniumpanda.app.api.photo;
 
-import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.domain.PhotoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -18,6 +17,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 public class PhotoResourceTest {
 
@@ -31,8 +32,7 @@ public class PhotoResourceTest {
     private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
     private final PhotoService photoService = mock(PhotoService.class);
-    private final PhotoUploadResource photoUploadResource = mock(PhotoUploadResource.class);
-    private final PhotoResource underTest = new PhotoResource(photoService, photoUploadResource);
+    private final PhotoResource underTest = new PhotoResource(photoService);
     private final MockMultipartFile mockPhotoFile = new MockMultipartFile("Hello", "hello".getBytes());
     private final PhotoRequestMetadata photoRequestMetadata = new PhotoRequestMetadata(TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
 
@@ -126,5 +126,25 @@ public class PhotoResourceTest {
 
         assertThat(result.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.hasBody(), is(false));
+    }
+
+    @Test
+    public void shouldReturnOKIfPhotoDeleted() {
+        when(photoService.deletePhoto(PHOTO_ID)).thenReturn(true);
+
+        ResponseEntity<Boolean> result = underTest.deleteCategory(PHOTO_ID);
+
+        assertThat(result.hasBody(), is(false));
+        assertThat(result.getStatusCode(), is(OK));
+    }
+
+    @Test
+    public void shouldReturn404IfProblemDeletingCategory() {
+        when(photoService.deletePhoto(PHOTO_ID)).thenReturn(false);
+
+        ResponseEntity<Boolean> result = underTest.deleteCategory(PHOTO_ID);
+
+        assertThat(result.hasBody(), is(false));
+        assertThat(result.getStatusCode(), is(BAD_REQUEST));
     }
 }

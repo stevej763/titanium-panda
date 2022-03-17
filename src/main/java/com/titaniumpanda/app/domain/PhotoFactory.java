@@ -16,7 +16,7 @@ public class PhotoFactory {
 
     public PhotoDto convertToDto(Photo photo) {
         return new PhotoDto(photo.getPhotoId(),
-                photo.getTitle(),
+                photo.getPhotoTitle(),
                 photo.getPhotoThumbnailUrl(),
                 photo.getDescription(),
                 photo.getCreatedDateTime(),

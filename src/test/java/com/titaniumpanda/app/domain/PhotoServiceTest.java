@@ -16,8 +16,7 @@ import java.util.UUID;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PhotoServiceTest {
 
@@ -40,9 +39,11 @@ public class PhotoServiceTest {
     private final Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
     private final Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
     private final Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final List<Photo> photoList = List.of(photo1, photo2, photo3);
     private final PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
     private final PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
     private final PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final List<PhotoDto> photoDtos = List.of(photoDto1, photoDto2, photoDto3);
 
     private final PhotoService underTest = new PhotoService(photoFactory, photoRepository, photoUploadResource);
 
@@ -63,13 +64,11 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldReturnListOfPhotoDtoObjects() {
-        List<Photo> photos = getPhotos();
         PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        List<PhotoDto> photoDtos = getPhotoDtos();
 
-        when(photoRepository.findAll()).thenReturn(photos);
+        when(photoRepository.findAll()).thenReturn(photoList);
         when(photoFactory.convertToDto(photo1)).thenReturn(photoDto1);
         when(photoFactory.convertToDto(photo2)).thenReturn(photoDto2);
         when(photoFactory.convertToDto(photo3)).thenReturn(photoDto3);
@@ -77,20 +76,10 @@ public class PhotoServiceTest {
         assertThat(underTest.findAll(), is(photoDtos));
     }
 
-    private List<PhotoDto> getPhotoDtos() {
-        return List.of(photoDto1, photoDto2, photoDto3);
-    }
-
-    private List<Photo> getPhotos() {
-        return List.of(photo1, photo2, photo3);
-    }
-
     @Test
     public void shouldReturnPhotoDtosForCategory() {
-        List<Photo> photos = getPhotos();
-        List<PhotoDto> photoDtos = getPhotoDtos();
 
-        when(photoRepository.findByCategoryId(CATEGORY_ID)).thenReturn(photos);
+        when(photoRepository.findByCategoryId(CATEGORY_ID)).thenReturn(photoList);
         when(photoFactory.convertToDto(photo1)).thenReturn(photoDto1);
         when(photoFactory.convertToDto(photo2)).thenReturn(photoDto2);
         when(photoFactory.convertToDto(photo3)).thenReturn(photoDto3);
@@ -124,5 +113,25 @@ public class PhotoServiceTest {
         Optional<PhotoDto> result = underTest.save(photoFile, metadata);
 
         assertThat(result, Is.is(Optional.of(photoDto)));
+    }
+
+    @Test
+    public void shouldReturnTrueIfphotoSuccessfullyDeleted() {
+        when(photoRepository.findById(photoId1)).thenReturn(Optional.of(photo1));
+
+        Boolean result = underTest.deletePhoto(photoId1);
+
+        verify(photoRepository).delete(photo1);
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void shouldReturnFalseIfPhotoNotFound() {
+        when(photoRepository.findById(photoId1)).thenReturn(Optional.empty());
+
+        Boolean result = underTest.deletePhoto(photoId1);
+
+        verify(photoRepository, never()).delete(photo1);
+        assertThat(result, is(false));
     }
 }

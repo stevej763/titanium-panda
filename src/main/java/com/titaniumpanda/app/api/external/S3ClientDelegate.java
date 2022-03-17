@@ -29,12 +29,10 @@ public class S3ClientDelegate {
     public Optional<PhotoUploadDetails> upload(String fileKey, InputStream inputStream, long fileSize) {
         ObjectMetadata metadata = getMetadata(fileSize);
         try {
-            LOGGER.info("Attempting to put object with fileKey={} of size={} into bucket={} at location={}",
-                    fileKey, fileSize, bucketName, s3Client.getRegion());
-
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, inputStream, metadata);
-
             s3Client.putObject(putObjectRequest);
+            LOGGER.info("object uploaded to s3 fileKey={} size={} bucket={} location={}",
+                    fileKey, fileSize, bucketName, s3Client.getRegion());
         } catch (Exception e) {
             LOGGER.error("Error putting object into bucket={}", bucketName);
             LOGGER.error(e.getMessage());

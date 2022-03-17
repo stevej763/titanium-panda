@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 import com.titaniumpanda.app.domain.Photo;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -98,6 +99,23 @@ public class PhotoResourceWebTest extends AbstractWebTest {
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         assertThat(responseEntity.hasBody(), is(true));
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.CREATED));
+    }
+
+    @Test
+    public void shouldDeletePhoto() {
+        Photo photo = new Photo(CATEGORY_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        mongoTestTemplate.save(photo, collectionName);
+        String checkDeletedUrl = localhostWithPort + "/api/photo/" + CATEGORY_ID;
+
+        String deleteUrl = localhostWithPort + "/api/photo/delete/" + CATEGORY_ID;
+
+        ResponseEntity<String> beforeDeleteResult = restTemplate.getForEntity(checkDeletedUrl, String.class);
+        restTemplate.delete(deleteUrl);
+
+        ResponseEntity<String> afterDeleteResult = restTemplate.getForEntity(checkDeletedUrl, String.class);
+
+        assertThat(beforeDeleteResult.getStatusCode(), Is.is(HttpStatus.OK));
+        assertThat(afterDeleteResult.getStatusCode(), Is.is(HttpStatus.NO_CONTENT));
     }
 
     private HttpEntity<Object> createRequest(PhotoRequestMetadata requestMetadata, FileSystemResource testPhotoFile) {

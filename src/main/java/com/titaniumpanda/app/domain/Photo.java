@@ -48,7 +48,7 @@ public class Photo {
         return photoId;
     }
 
-    public String getTitle() {
+    public String getPhotoTitle() {
         return title;
     }
 

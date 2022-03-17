@@ -48,7 +48,7 @@ public class PhotoService {
             Photo persistedPhoto = photoFactory.createNewPhoto(photoUploadDetails, photoRequestMetadata);
             Photo result = photoRepository.save(persistedPhoto);
 
-            LOGGER.info("new photo saved photoId={} photoTitle={}", result.getPhotoId(), result.getTitle());
+            LOGGER.info("photo saved photoId={} photoTitle={}", result.getPhotoId(), result.getPhotoTitle());
             return Optional.of(photoFactory.convertToDto(result));
         } else {
             LOGGER.error("Error Uploading photo");
@@ -58,5 +58,21 @@ public class PhotoService {
 
     public List<PhotoDto> findByCategoryId(UUID categoryId) {
         return photoRepository.findByCategoryId(categoryId).stream().map(photoFactory::convertToDto).collect(Collectors.toList());
+    }
+
+    public Boolean deletePhoto(UUID photoId) {
+        Optional<Photo> photo = photoRepository.findById(photoId);
+        if (photo.isPresent()) {
+
+            //todo add in logic to delete photo in s3 too
+
+            Photo photoToDelete = photo.get();
+            photoRepository.delete(photoToDelete);
+            LOGGER.info("photo deleted categoryId={} categoryName={}",
+                    photoToDelete.getPhotoId(), photoToDelete.getPhotoTitle());
+            return true;
+        } else {
+            return false;
+        }
     }
 }

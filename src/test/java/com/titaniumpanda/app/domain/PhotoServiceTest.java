@@ -4,10 +4,10 @@ import com.titaniumpanda.app.api.category.CategoryDto;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
+import com.titaniumpanda.app.api.photo.PhotoUpdateRequest;
 import com.titaniumpanda.app.repository.PhotoRepository;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDateTime;
@@ -35,6 +35,7 @@ public class PhotoServiceTest {
     private final PhotoRepository photoRepository = mock(PhotoRepository.class);
     private final PhotoUploadResource photoUploadResource = mock(PhotoUploadResource.class);
     private final CategoryService categoryService = mock(CategoryService.class);
+    private final CategoryDto categoryDto = mock(CategoryDto.class);
 
     private final UUID photoId1 = UUID.randomUUID();
     private final UUID photoId2 = UUID.randomUUID();
@@ -49,8 +50,6 @@ public class PhotoServiceTest {
     private final List<PhotoDto> photoDtos = List.of(photoDto1, photoDto2, photoDto3);
 
     private final PhotoService underTest = new PhotoService(photoFactory, photoRepository, photoUploadResource, categoryService);
-    private final ResponseEntity<CategoryDto> categorySearchResult = ResponseEntity.noContent().build();
-    private final CategoryDto categoryDto = mock(CategoryDto.class);
 
     @Test
     public void shouldReturnPhotoDto() {
@@ -206,5 +205,24 @@ public class PhotoServiceTest {
         Optional<PhotoDto> result = underTest.removePhotoFromCategory(PHOTO_ID, CATEGORY_ID);
 
         assertThat(result, Is.is(Optional.of(photoDto)));
+    }
+
+    @Test
+    public void shouldUpdatePhotoDetails() {
+        String updatedDescription = "new description";
+        String updatedTitle = "new name";
+        PhotoUpdateRequest photoUpdateRequest = new PhotoUpdateRequest(PHOTO_ID, updatedTitle, updatedDescription);
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, updatedTitle, PHOTO_THUMBNAIL_URL, updatedDescription, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo updatedPhoto = new Photo(PHOTO_ID, updatedTitle, PHOTO_THUMBNAIL_URL, updatedDescription, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), PHOTO_BASE_URL, CATEGORY_IDS);
+
+        when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
+        when(photoFactory.updatePhoto(photo, photoUpdateRequest)).thenReturn(updatedPhoto);
+        when(photoRepository.save(updatedPhoto)).thenReturn(updatedPhoto);
+        when(photoFactory.convertToDto(updatedPhoto)).thenReturn(photoDto);
+
+        Optional<PhotoDto> result = underTest.updatePhoto(photoUpdateRequest);
+
+        assertThat(result, is(Optional.of(photoDto)));
     }
 }

@@ -2,6 +2,7 @@ package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
+import com.titaniumpanda.app.api.photo.PhotoUpdateRequest;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -46,6 +47,22 @@ public class PhotoFactoryTest {
         Photo result = underTest.createNewPhoto(photoUploadDetails, metadata);
 
         assertThat(result.getPhotoId(), is(photo.getPhotoId()));
+    }
+
+    @Test
+    public void shouldReturnUpdatedPhotoWithNewName() {
+        String updatedTitle = "new title";
+        String updatedDescription = "new description";
+        PhotoUpdateRequest updateRequest = new PhotoUpdateRequest(PHOTO_ID, updatedTitle, updatedDescription);
+        Photo oldPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo updatedPhoto = new Photo(PHOTO_ID, updatedTitle, PHOTO_THUMBNAIL_URL, updatedDescription, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+
+        Photo result = underTest.updatePhoto(oldPhoto, updateRequest);
+
+        assertThat(result.getPhotoId(), is(updatedPhoto.getPhotoId()));
+        assertThat(result.getPhotoTitle(), is(updatedTitle));
+        assertThat(result.getDescription(), is(updatedDescription));
+        assertThat(result.getModifiedDateTime(), not(oldPhoto.getModifiedDateTime()));
     }
 
     @Test

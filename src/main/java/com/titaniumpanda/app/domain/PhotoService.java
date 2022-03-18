@@ -3,6 +3,7 @@ package com.titaniumpanda.app.domain;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
+import com.titaniumpanda.app.api.photo.PhotoUpdateRequest;
 import com.titaniumpanda.app.repository.PhotoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,5 +126,19 @@ public class PhotoService {
 
     private boolean photoContainsCategoryId(UUID categoryId, Photo photo) {
         return photo.getCategoryIds().contains(categoryId);
+    }
+
+    public Optional<PhotoDto> updatePhoto(PhotoUpdateRequest photoUpdateRequest) {
+        LOGGER.info("photoUpdateRequest request={}", photoUpdateRequest);
+        Optional<Photo> existingPhoto = photoRepository.findById(photoUpdateRequest.getPhotoId());
+        if(existingPhoto.isPresent()) {
+            Photo updatedPhoto = photoFactory.updatePhoto(existingPhoto.get(), photoUpdateRequest);
+            Photo savedPhoto = photoRepository.save(updatedPhoto);
+            LOGGER.info("photo updated updatedTime={} photoId={} photoTitle={}",
+                    savedPhoto.getModifiedDateTime(), savedPhoto.getPhotoId(), savedPhoto.getPhotoTitle());
+            return Optional.of(photoFactory.convertToDto(savedPhoto));
+        } else {
+            return Optional.empty();
+        }
     }
 }

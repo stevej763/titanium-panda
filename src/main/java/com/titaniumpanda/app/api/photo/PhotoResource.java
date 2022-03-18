@@ -60,7 +60,7 @@ public class PhotoResource {
         return ResponseEntity.ok().body(photosForCategory);
     }
 
-    @PostMapping(value = "/upload", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PhotoDto> addPhoto(PhotoRequestMetadata photoRequestMetadata, MultipartFile photo) {
         Optional<PhotoDto> response = photoService.save(photo, photoRequestMetadata);
         if (response.isPresent()) {
@@ -93,6 +93,17 @@ public class PhotoResource {
             return ResponseEntity.ok().body(photoDto);
         } else {
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping(value = "/update")
+    public ResponseEntity<PhotoDto> updatePhoto(PhotoUpdateRequest photoUpdateRequest) {
+        Optional<PhotoDto> response = photoService.updatePhoto(photoUpdateRequest);
+        if (response.isPresent()) {
+            PhotoDto updatedPhoto = response.get();
+            return ResponseEntity.ok().body(updatedPhoto);
+        } else {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

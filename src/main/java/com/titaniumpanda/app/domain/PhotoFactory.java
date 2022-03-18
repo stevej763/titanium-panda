@@ -2,6 +2,7 @@ package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
+import com.titaniumpanda.app.api.photo.PhotoUpdateRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,5 +67,19 @@ public class PhotoFactory {
                 modifiedDateTime,
                 photo.getPhotoBaseUrl(),
                 categoryIds);
+    }
+
+    public Photo updatePhoto(Photo photo, PhotoUpdateRequest photoUpdateRequest) {
+        LocalDateTime modifiedDateTime = LocalDateTime.now();
+        String updatedPhotoTitle = photoUpdateRequest.getPhotoTitle();
+        String updatedPhotoDescription = photoUpdateRequest.getPhotoDescription();
+        return new Photo(photo.getPhotoId(),
+                updatedPhotoTitle == null ? photo.getPhotoTitle() : updatedPhotoTitle,
+                photo.getPhotoThumbnailUrl(),
+                updatedPhotoDescription == null ? photo.getPhotoTitle() : updatedPhotoDescription,
+                photo.getCreatedDateTime(),
+                modifiedDateTime,
+                photo.getPhotoBaseUrl(),
+                photo.getCategoryIds());
     }
 }

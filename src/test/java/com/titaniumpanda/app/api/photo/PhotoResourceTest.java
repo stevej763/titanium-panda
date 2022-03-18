@@ -31,10 +31,10 @@ public class PhotoResourceTest {
     private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.now();
     private static final String PHOTO_DESCRIPTION = "description";
     private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
-    private static final String TITLE = "title";
+    private static final String PHOTO_TITLE = "title";
     private final PhotoService photoService = mock(PhotoService.class);
     private final MockMultipartFile mockPhotoFile = new MockMultipartFile("Hello", "hello".getBytes());
-    private final PhotoRequestMetadata photoRequestMetadata = new PhotoRequestMetadata(TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
+    private final PhotoRequestMetadata photoRequestMetadata = new PhotoRequestMetadata(PHOTO_TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
 
     private final PhotoResource underTest = new PhotoResource(photoService);
 
@@ -91,9 +91,9 @@ public class PhotoResourceTest {
         UUID photoId2 = UUID.randomUUID();
         UUID photoId3 = UUID.randomUUID();
         List<PhotoDto> photoDtos = List.of(
-                new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
-                new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
-                new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS));
+                new PhotoDto(photoId1, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
+                new PhotoDto(photoId2, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
+                new PhotoDto(photoId3, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS));
 
         when(photoService.findByCategoryId(CATEGORY_ID)).thenReturn(photoDtos);
 
@@ -104,8 +104,8 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnSavedPhotoOnSuccessfulPost() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        PhotoRequestMetadata photoUploadDetails = new PhotoRequestMetadata(TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoRequestMetadata photoUploadDetails = new PhotoRequestMetadata(PHOTO_TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
 
         when(photoService.save(mockPhotoFile, photoUploadDetails)).thenReturn(Optional.of(photoDto));
 
@@ -121,7 +121,7 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnUpdatedPhotoWithNewCategory() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         when(photoService.addPhotoToCategory(PHOTO_ID, CATEGORY_ID)).thenReturn(Optional.of(photoDto));
 
         ResponseEntity<PhotoDto> result = underTest.addPhotoToCategory(PHOTO_ID, CATEGORY_ID);
@@ -130,7 +130,7 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnUpdatedPhotoWithRemovedCategory() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
         when(photoService.removePhotoFromCategory(PHOTO_ID, CATEGORY_ID)).thenReturn(Optional.of(photoDto));
 
         ResponseEntity<PhotoDto> result = underTest.removePhotoFromCategory(PHOTO_ID, CATEGORY_ID);
@@ -139,7 +139,7 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnErrorOnFailureToSaveNewPhoto() {
-        PhotoRequestMetadata photoUploadDetails = new PhotoRequestMetadata(TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
+        PhotoRequestMetadata photoUploadDetails = new PhotoRequestMetadata(PHOTO_TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
 
         when(photoService.save(mockPhotoFile, photoUploadDetails)).thenReturn(Optional.empty());
 
@@ -167,5 +167,18 @@ public class PhotoResourceTest {
 
         assertThat(result.hasBody(), is(false));
         assertThat(result.getStatusCode(), is(BAD_REQUEST));
+    }
+
+    @Test
+    public void shouldUpdatePhoto() {
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        PhotoUpdateRequest photoUpdateRequest = new PhotoUpdateRequest(UUID.randomUUID(), PHOTO_TITLE, PHOTO_DESCRIPTION);
+
+        when(photoService.updatePhoto(photoUpdateRequest)).thenReturn(Optional.of(photoDto));
+
+        ResponseEntity<PhotoDto> result = underTest.updatePhoto(photoUpdateRequest);
+
+        assertThat(result.getStatusCode(), Is.is(OK));
+        assertThat(result.getBody(), Is.is(photoDto));
     }
 }

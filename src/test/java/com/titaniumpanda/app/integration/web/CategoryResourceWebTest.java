@@ -112,7 +112,7 @@ public class CategoryResourceWebTest extends AbstractWebTest {
     @Test
     @Disabled
     public void shouldUpdateCategory() {
-        //TODO: fix this test. I can't see why it fails as it should work almost the same as the update. Unit tests and
+        //TODO: fix this test. I can't see why it fails as it should work almost the same as the new post. Unit tests and
         // manual test works so will leave this for later. Can't convert the form to CategoryUpdateRequest.
         mongoTestTemplate.save(category, collectionName);
         String newCategoryName = "new category name";

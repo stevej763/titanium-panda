@@ -1,8 +1,6 @@
 package com.titaniumpanda.app;
 
-import com.titaniumpanda.app.api.external.AwsPhotoUploadService;
-import com.titaniumpanda.app.api.external.PhotoUploadResource;
-import com.titaniumpanda.app.api.external.S3ClientDelegate;
+import com.titaniumpanda.app.api.external.*;
 import com.titaniumpanda.app.domain.*;
 import com.titaniumpanda.app.repository.CategoryRepository;
 import com.titaniumpanda.app.repository.PhotoRepository;
@@ -25,12 +23,27 @@ public class ApplicationResourceConfiguration {
 
     @Bean
     public PhotoUploadResource photoUploadService() {
-        return new PhotoUploadResource(awsFileUploadResource());
+        return new PhotoUploadResource(awsPhotoFileHandler(), fileConversionService(), fileUploadPreparationService());
     }
 
     @Bean
-    public AwsPhotoUploadService awsFileUploadResource() {
-        return new AwsPhotoUploadService(idService, photoS3Client());
+    public FileUploadPreparationService fileUploadPreparationService() {
+        return new FileUploadPreparationService(imageCompressionService(), fileConversionService());
+    }
+
+    @Bean
+    public FileConversionService fileConversionService() {
+        return new FileConversionService();
+    }
+
+    @Bean
+    public ImageCompressionService imageCompressionService() {
+        return new ImageCompressionService();
+    }
+
+    @Bean
+    public AwsPhotoFileHandler awsPhotoFileHandler() {
+        return new AwsPhotoFileHandler(idService, photoS3Client());
     }
 
     @Bean

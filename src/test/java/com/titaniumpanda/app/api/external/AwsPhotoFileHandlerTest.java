@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AwsPhotoUploadServiceTest {
+public class AwsPhotoFileHandlerTest {
 
 
     private final IdService idService = mock(IdService.class);
@@ -28,7 +28,7 @@ public class AwsPhotoUploadServiceTest {
     private final String fileKey = s3UploadId + ".jpeg";
     private final PhotoUploadDetails photoUploadDetails = new PhotoUploadDetails(fileKey, fileKey);
 
-    private final AwsPhotoUploadService underTest = new AwsPhotoUploadService(idService, s3ClientDelegate);
+    private final AwsPhotoFileHandler underTest = new AwsPhotoFileHandler(idService, s3ClientDelegate);
 
     @Test
     public void shouldReturnPhotoUploadDetailsOnSuccess() {

@@ -22,7 +22,7 @@ public class MongoDbConfiguration {
     @Bean
     public MongoTemplate mongoTemplate() {
         MongoTemplate mongoTemplate = new MongoTemplate(mongoClient(), environment.getProperty("mongodb.database"));
-        mongoTemplate.indexOps("category").ensureIndex(new Index().on("categoryDescription", Sort.Direction.ASC));
+        mongoTemplate.indexOps("category").ensureIndex(new Index().on("categoryTitle", Sort.Direction.ASC));
         return mongoTemplate;
     }
 

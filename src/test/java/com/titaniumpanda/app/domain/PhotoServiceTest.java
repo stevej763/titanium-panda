@@ -82,7 +82,6 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldReturnPhotoDtosForCategory() {
-
         when(photoRepository.findByCategoryId(CATEGORY_ID)).thenReturn(photoList);
         when(photoFactory.convertToDto(photo1)).thenReturn(photoDto1);
         when(photoFactory.convertToDto(photo2)).thenReturn(photoDto2);
@@ -120,7 +119,7 @@ public class PhotoServiceTest {
     }
 
     @Test
-    public void shouldReturnTrueIfphotoSuccessfullyDeleted() {
+    public void shouldReturnTrueWhenPhotoSuccessfullyDeleted() {
         when(photoRepository.findById(photoId1)).thenReturn(Optional.of(photo1));
 
         Boolean result = underTest.deletePhoto(photoId1);
@@ -222,7 +221,6 @@ public class PhotoServiceTest {
         when(photoFactory.convertToDto(updatedPhoto)).thenReturn(photoDto);
 
         Optional<PhotoDto> result = underTest.updatePhoto(photoUpdateRequest);
-
         assertThat(result, is(Optional.of(photoDto)));
     }
 }

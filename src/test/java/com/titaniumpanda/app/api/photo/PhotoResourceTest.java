@@ -124,7 +124,16 @@ public class PhotoResourceTest {
         PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
         when(photoService.addPhotoToCategory(PHOTO_ID, CATEGORY_ID)).thenReturn(Optional.of(photoDto));
 
-        ResponseEntity<PhotoDto> result = underTest.addPhotoCategory(PHOTO_ID, CATEGORY_ID);
+        ResponseEntity<PhotoDto> result = underTest.addPhotoToCategory(PHOTO_ID, CATEGORY_ID);
+        assertThat(result.getBody(), Is.is(photoDto));
+    }
+
+    @Test
+    public void shouldReturnUpdatedPhotoWithRemovedCategory() {
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        when(photoService.removePhotoFromCategory(PHOTO_ID, CATEGORY_ID)).thenReturn(Optional.of(photoDto));
+
+        ResponseEntity<PhotoDto> result = underTest.removePhotoFromCategory(PHOTO_ID, CATEGORY_ID);
         assertThat(result.getBody(), Is.is(photoDto));
     }
 

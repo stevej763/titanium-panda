@@ -7,5 +7,4 @@ public class TitaniumPandaApplicationTest {
     @Test
     void contextLoads() {
     }
-
 }

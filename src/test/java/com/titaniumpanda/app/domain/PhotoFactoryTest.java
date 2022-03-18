@@ -61,6 +61,35 @@ public class PhotoFactoryTest {
     }
 
     @Test
+    public void shouldReturnUpdatedPhotoWithCategoryIdRemoved() {
+        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, Collections.emptyList());
+
+        Photo result = underTest.updatePhotoWithCategoryRemoved(photo, CATEGORY_ID);
+
+        assertThat(result.getPhotoId(), is(updatedPhoto.getPhotoId()));
+        assertThat(result.getCategoryIds(), is(updatedPhoto.getCategoryIds()));
+        assertThat(result.getModifiedDateTime(), not(photo.getModifiedDateTime()));
+    }
+
+    @Test
+    public void shouldReturnUpdatedPhotoWithRemainingCategories() {
+        UUID category1 = UUID.randomUUID();
+        UUID category2 = UUID.randomUUID();
+        UUID category3 = UUID.randomUUID();
+        List<UUID> oldCategories = List.of(category1, category2, category3);
+        List<UUID> updatedCategories = List.of(category1, category2);
+        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, oldCategories);
+        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, updatedCategories);
+
+        Photo result = underTest.updatePhotoWithCategoryRemoved(photo, category3);
+
+        assertThat(result.getPhotoId(), is(updatedPhoto.getPhotoId()));
+        assertThat(result.getCategoryIds(), is(updatedPhoto.getCategoryIds()));
+        assertThat(result.getModifiedDateTime(), not(photo.getModifiedDateTime()));
+    }
+
+    @Test
     public void shouldReturnUpdatedPhotoWithBothOldAndNewCategories() {
         UUID category1 = UUID.randomUUID();
         UUID category2 = UUID.randomUUID();

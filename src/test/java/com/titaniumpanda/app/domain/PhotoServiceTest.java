@@ -190,4 +190,21 @@ public class PhotoServiceTest {
         verify(categoryService).findById(CATEGORY_ID);
         assertThat(result, Is.is(Optional.empty()));
     }
+
+    @Test
+    public void shouldReturnPhotoDtoWithCategoryRemoved() {
+        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), PHOTO_BASE_URL, emptyList());
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+
+        when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
+        when(photoFactory.updatePhotoWithCategoryRemoved(photo, CATEGORY_ID)).thenReturn(modifiedPhoto);
+        when(photoRepository.save(modifiedPhoto)).thenReturn(modifiedPhoto);
+        when(photoFactory.convertToDto(modifiedPhoto)).thenReturn(photoDto);
+        when(categoryService.findById(CATEGORY_ID)).thenReturn(Optional.of(categoryDto));
+
+        Optional<PhotoDto> result = underTest.removePhotoFromCategory(PHOTO_ID, CATEGORY_ID);
+
+        assertThat(result, Is.is(Optional.of(photoDto)));
+    }
 }

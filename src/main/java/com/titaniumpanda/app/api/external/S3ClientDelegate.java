@@ -27,7 +27,7 @@ public class S3ClientDelegate {
     }
 
     public Optional<PhotoUploadDetails> upload(String fileKey, InputStream inputStream, long fileSize) {
-        ObjectMetadata metadata = getMetadata(fileSize);
+        ObjectMetadata metadata = constructMetadata(fileSize);
         try {
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, inputStream, metadata);
             s3Client.putObject(putObjectRequest);
@@ -42,7 +42,7 @@ public class S3ClientDelegate {
         return Optional.of(new PhotoUploadDetails(url, url));
     }
 
-    private ObjectMetadata getMetadata(long contentLength) {
+    private ObjectMetadata constructMetadata(long contentLength) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(contentLength);
         metadata.setContentType("image/jpeg");

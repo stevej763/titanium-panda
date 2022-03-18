@@ -56,6 +56,19 @@ public class PhotoCategoryWebTest extends AbstractWebTest {
     }
 
     @Test
+    public void shouldRemovePhotoFromCategory() {
+        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Category category = new Category(CATEGORY_ID, "name", "description", CREATED_DATE_TIME, MODIFIED_DATE_TIME);
+
+        mongoTestTemplate.save(photo);
+        mongoTestTemplate.save(category);
+        String url = localhostWithPort + String.format("/api/photo/%s/category/delete/%s", PHOTO_ID, CATEGORY_ID);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, null, String.class);
+
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
     public void shouldReturnPhotoDtoListForCategory() throws JsonProcessingException {
         UUID photoId1 = UUID.randomUUID();
         UUID photoId2 = UUID.randomUUID();

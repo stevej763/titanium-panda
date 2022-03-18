@@ -81,11 +81,32 @@ public class PhotoService {
         Optional<Photo> result = photoRepository.findById(photoId);
         if (result.isPresent()) {
             Photo photo = result.get();
-            if(categoryExists(categoryId, photoId) && !alreadyContainsCategoryId(categoryId, photo)) {
+            if(categoryExists(categoryId, photoId) && !photoContainsCategoryId(categoryId, photo)) {
                 Photo modifiedPhoto = photoFactory.updatePhotoWithNewCategory(photo, categoryId);
                 Photo updatedPhoto = photoRepository.save(modifiedPhoto);
+                LOGGER.info("photo added to category photoId={} categoryId={}", photoId, categoryId);
                 return Optional.of(photoFactory.convertToDto(updatedPhoto));
             } else {
+                LOGGER.info("photo already in category or category does not exist photoId={} categoryId={}", photo.getPhotoId(), categoryId);
+                return Optional.empty();
+            }
+        } else {
+            LOGGER.info("no photo found with photoId={}", photoId);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<PhotoDto> removePhotoFromCategory(UUID photoId, UUID categoryId) {
+        Optional<Photo> result = photoRepository.findById(photoId);
+        if (result.isPresent()) {
+            Photo photo = result.get();
+            if(photoContainsCategoryId(categoryId, photo)) {
+                Photo modifiedPhoto = photoFactory.updatePhotoWithCategoryRemoved(photo, categoryId);
+                Photo updatedPhoto = photoRepository.save(modifiedPhoto);
+                LOGGER.info("photo removed from category photoId={} categoryId={}", photoId, categoryId);
+                return Optional.of(photoFactory.convertToDto(updatedPhoto));
+            } else {
+                LOGGER.info("cannot remove photo from category it is not in categoryId={} photoId={}", categoryId, photoId);
                 return Optional.empty();
             }
         } else {
@@ -102,11 +123,7 @@ public class PhotoService {
         return category;
     }
 
-    private boolean alreadyContainsCategoryId(UUID categoryId, Photo photo) {
-        boolean result = photo.getCategoryIds().contains(categoryId);
-        if(result) {
-            LOGGER.info("photo already in category photoId={} categoryId={}", photo.getPhotoId(), categoryId);
-        }
-        return result;
+    private boolean photoContainsCategoryId(UUID categoryId, Photo photo) {
+        return photo.getCategoryIds().contains(categoryId);
     }
 }

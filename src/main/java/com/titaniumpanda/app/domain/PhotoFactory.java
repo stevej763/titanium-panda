@@ -53,4 +53,18 @@ public class PhotoFactory {
                 photo.getPhotoBaseUrl(),
                 categoryIds);
     }
+
+    public Photo updatePhotoWithCategoryRemoved(Photo photo, UUID categoryId) {
+        List<UUID> categoryIds = new ArrayList<>(photo.getCategoryIds());
+        categoryIds.remove(categoryId);
+        LocalDateTime modifiedDateTime = LocalDateTime.now();
+        return new Photo(photo.getPhotoId(),
+                photo.getPhotoTitle(),
+                photo.getPhotoThumbnailUrl(),
+                photo.getDescription(),
+                photo.getCreatedDateTime(),
+                modifiedDateTime,
+                photo.getPhotoBaseUrl(),
+                categoryIds);
+    }
 }

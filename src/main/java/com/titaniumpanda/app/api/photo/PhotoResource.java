@@ -73,9 +73,21 @@ public class PhotoResource {
     }
 
     @PostMapping(value = "/{photoId}/category/add/{categoryId}")
-    public ResponseEntity<PhotoDto> addPhotoCategory(@PathVariable("photoId") UUID photoId,
-                                                     @PathVariable("categoryId") UUID categoryId) {
+    public ResponseEntity<PhotoDto> addPhotoToCategory(@PathVariable("photoId") UUID photoId,
+                                                       @PathVariable("categoryId") UUID categoryId) {
         Optional<PhotoDto> response = photoService.addPhotoToCategory(photoId, categoryId);
+        if (response.isPresent()) {
+            PhotoDto photoDto = response.get();
+            return ResponseEntity.ok().body(photoDto);
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping(value = "/{photoId}/category/delete/{categoryId}")
+    public ResponseEntity<PhotoDto> removePhotoFromCategory(@PathVariable("photoId") UUID photoId,
+                                                            @PathVariable("categoryId") UUID categoryId) {
+        Optional<PhotoDto> response = photoService.removePhotoFromCategory(photoId, categoryId);
         if (response.isPresent()) {
             PhotoDto photoDto = response.get();
             return ResponseEntity.ok().body(photoDto);

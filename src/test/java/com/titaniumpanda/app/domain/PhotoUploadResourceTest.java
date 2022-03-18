@@ -34,7 +34,7 @@ public class PhotoUploadResourceTest {
 
         when(fileConversionService.convertUploadedPhotoToFile(mulipartPhotoFile)).thenReturn(Optional.of(file));
         when(file.delete()).thenReturn(true);
-        when(fileUploadPreparationService.prepareImage(file)).thenReturn(Optional.of(photoUploadWrapper));
+        when(fileUploadPreparationService.prepareImage(file, "jpeg")).thenReturn(Optional.of(photoUploadWrapper));
         when(fileUploadResource.uploadFile(photoUploadWrapper)).thenReturn(Optional.of(photoUploadDetails));
 
         Optional<PhotoUploadDetails> result = underTest.upload(mulipartPhotoFile);

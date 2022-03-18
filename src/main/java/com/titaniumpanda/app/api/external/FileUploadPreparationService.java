@@ -1,11 +1,18 @@
 package com.titaniumpanda.app.api.external;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Optional;
 
 public class FileUploadPreparationService {
+
+    Logger LOGGER = LoggerFactory.getLogger(FileUploadPreparationService.class);
 
     @Autowired
     private final ImageCompressionService imageCompressionService;
@@ -17,17 +24,21 @@ public class FileUploadPreparationService {
         this.fileConversionService = fileConversionService;
     }
 
-    public Optional<PhotoUploadWrapper> prepareImage(File imageFile) {
-        return Optional.empty();
+    public Optional<PhotoUploadWrapper> prepareImage(File imageFile, String fileFormat) {
+        try {
+            BufferedImage result = imageCompressionService.compress(imageFile, 1920);
+            PhotoUploadWrapper photoUploadWrapper = createPhotoUploadWrapper(result, fileFormat);
+            return Optional.of(photoUploadWrapper);
+        } catch (CompressionException e) {
+            LOGGER.error("Error preparing file for upload message={}",e.getMessage());
+            return Optional.empty();
+        }
     }
 
-    //todo implement with tests
-//    private PhotoUploadWrapper prepareImage(File imageFile) throws IOException {
-//        BufferedImage result = imageCompressionService.compress(imageFile, 1920);
-//
-//        byte[] imageByteArray = fileConversionService.convertBufferedImageToByteArray(result);
-//        InputStream inputStream = new ByteArrayInputStream(imageByteArray);
-//
-//        return new PhotoUploadWrapper(inputStream, imageByteArray.length);
-//    }
+    private PhotoUploadWrapper createPhotoUploadWrapper(BufferedImage result, String fileFormat) {
+        byte[] imageByteArray = fileConversionService.convertBufferedImageToByteArray(result, fileFormat);
+        InputStream inputStream = new ByteArrayInputStream(imageByteArray);
+        return new PhotoUploadWrapper(inputStream, imageByteArray.length);
+    }
+
 }

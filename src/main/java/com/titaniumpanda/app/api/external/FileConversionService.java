@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,13 +33,20 @@ public class FileConversionService {
         }
     }
 
-    //todo implement these method with tests
-//    private byte[] convertCompressedImageToByteArray(BufferedImage result) throws IOException {
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        boolean didWrite = ImageIO.write(result, "jpeg", outputStream);
-//        if (!didWrite) {
-//            LOGGER.error("failed writing buffered image to output stream");
-//        }
-//        return outputStream.toByteArray();
-//    }
+    public byte[] convertBufferedImageToByteArray(BufferedImage result, String fileFormat) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            convertImageToOutputStream(result, outputStream, fileFormat);
+        } catch (IOException exception) {
+            LOGGER.error("exception thrown when converting processed image to output stream message={}", exception.getMessage());
+        }
+        return outputStream.toByteArray();
+    }
+
+    private void convertImageToOutputStream(BufferedImage result, ByteArrayOutputStream outputStream, String fileFormat) throws IOException {
+        boolean didWrite = ImageIO.write(result, fileFormat, outputStream);
+        if (!didWrite) {
+            throw new IOException("failed writing buffered image to output stream");
+        }
+    }
 }

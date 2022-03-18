@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 
-import static java.awt.image.BufferedImage.TYPE_4BYTE_ABGR;
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -17,7 +17,7 @@ class ImageCompressionServiceTest {
     public void shouldResizeTargetImageTo100Pixels() {
         int targetWidth = 100;
 
-        BufferedImage targetImage = new BufferedImage(1000, 1000, TYPE_4BYTE_ABGR);
+        BufferedImage targetImage = new BufferedImage(1000, 1000, TYPE_INT_RGB);
         BufferedImage result = underTest.compress(targetImage, targetWidth);
 
         assertThat(result.getWidth(), is(100));
@@ -25,7 +25,7 @@ class ImageCompressionServiceTest {
 
     @Test
     public void shouldMaintainAspectRatioWhenResizing() {
-        BufferedImage targetImage = new BufferedImage(800, 600, TYPE_4BYTE_ABGR);
+        BufferedImage targetImage = new BufferedImage(800, 600, TYPE_INT_RGB);
 
         BufferedImage result = underTest.compress(targetImage, 400);
 

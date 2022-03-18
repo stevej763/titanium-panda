@@ -33,15 +33,15 @@ public class PhotoUploadResource {
         Optional<File> convertedFile = fileConversionService.convertUploadedPhotoToFile(photo);
         if (convertedFile.isPresent()) {
             File imageFile = convertedFile.get();
-            Optional<PhotoUploadDetails> photoUploadDetails = uploadFile(imageFile);
+            Optional<PhotoUploadDetails> photoUploadDetails = uploadFile(imageFile, "jpeg");
             cleanup(imageFile);
             return photoUploadDetails;
         }
         return Optional.empty();
     }
 
-    private Optional<PhotoUploadDetails> uploadFile(File imageFile) {
-        Optional<PhotoUploadWrapper> optionalPhotoUploadWrapper = fileUploadPreparationService.prepareImage(imageFile);
+    private Optional<PhotoUploadDetails> uploadFile(File imageFile, String fileFormat) {
+        Optional<PhotoUploadWrapper> optionalPhotoUploadWrapper = fileUploadPreparationService.prepareImage(imageFile, fileFormat);
         if(optionalPhotoUploadWrapper.isPresent()) {
             PhotoUploadWrapper photoUploadWrapper = optionalPhotoUploadWrapper.get();
             return fileHandler.uploadFile(photoUploadWrapper);

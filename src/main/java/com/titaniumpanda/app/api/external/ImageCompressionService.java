@@ -7,15 +7,18 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 public class ImageCompressionService {
 
     Logger LOGGER = LoggerFactory.getLogger(ImageCompressionService.class);
 
-    public BufferedImage compress(File imageFile, int targetWidth) throws IOException {
-        BufferedImage bufferedImage = ImageIO.read(imageFile);
-        return compress(bufferedImage, targetWidth);
+    public BufferedImage compress(File imageFile, int targetWidth) throws CompressionException {
+        try {
+            BufferedImage bufferedImage = ImageIO.read(imageFile);
+            return compress(bufferedImage, targetWidth);
+        } catch (Exception e) {
+            throw new CompressionException("Failed to read file");
+        }
     }
 
     public BufferedImage compress(BufferedImage targetImage, int targetWidth) {

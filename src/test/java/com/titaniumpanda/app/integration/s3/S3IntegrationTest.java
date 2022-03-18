@@ -9,9 +9,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
@@ -40,8 +43,9 @@ public class S3IntegrationTest extends AbstractWebTest {
     private final byte[] bytes = photoTitle.getBytes(StandardCharsets.UTF_8);
 
     @Test
-    public void shouldSuccessfullySavePhoto() {
-        MockMultipartFile file = new MockMultipartFile(photoTitle, bytes);
+    public void shouldSuccessfullySavePhoto() throws IOException {
+        FileSystemResource realFile = new FileSystemResource("src/test/resources/testimage.jpeg");
+        MockMultipartFile file = new MockMultipartFile(photoTitle, photoTitle, "image/jpeg", realFile.getInputStream());
 
         PhotoRequestMetadata metadata = new PhotoRequestMetadata(photoTitle, "S3IntegrationTest", Collections.emptyList());
         photoService.save(file, metadata);
@@ -59,7 +63,8 @@ public class S3IntegrationTest extends AbstractWebTest {
         System.out.println(photoUrl);
         ResponseEntity<String> response = restTemplate.getForEntity(photoUrl, String.class);
 
-        assertThat(response.getBody(), is(photoTitle));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.hasBody(), is(true));
     }
 
 }

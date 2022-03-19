@@ -6,7 +6,7 @@ public enum PhotoResolution {
     SMALL(1280, "small"),
     MEDIUM(1920, "medium"),
     LARGE(2560, "large"),
-//    EXTRA_LARGE(3840, "extra-large"),
+    EXTRA_LARGE(3840, "extra-large"),
     ORIGINAL(0, "original")
     ;
 

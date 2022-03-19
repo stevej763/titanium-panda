@@ -30,11 +30,9 @@ public class PhotoResourceWebTest extends AbstractWebTest {
     private static final UUID CATEGORY_ID = UUID.randomUUID();
     private static final UUID UPLOAD_ID = UUID.randomUUID();
     private static final List<UUID> CATEGORY_IDS = List.of(CATEGORY_ID);
-    private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final String PHOTO_DESCRIPTION = "PhotoResourceWebTest";
-    private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
     private final PhotoRequestMetadata requestMetadata = new PhotoRequestMetadata(TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
     private static final UUID PHOTO_ID = UUID.randomUUID();

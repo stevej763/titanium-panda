@@ -8,11 +8,10 @@ public class PhotoBuilder {
 
     private UUID photoId;
     private String title;
-    private String photoThumbnailUrl;
+    private UUID uploadId;
     private String photoDescription;
     private LocalDateTime createdDateTime;
     private LocalDateTime modifiedDateTime;
-    private String photoBaseUrl;
     private List<UUID> categories;
 
     public PhotoBuilder setPhotoId(UUID photoId) {
@@ -25,8 +24,8 @@ public class PhotoBuilder {
         return this;
     }
 
-    public PhotoBuilder setPhotoThumbnail(String photoThumbnailUrl) {
-        this.photoThumbnailUrl = photoThumbnailUrl;
+    public PhotoBuilder setUploadId(UUID uploadId) {
+        this.uploadId = uploadId;
         return this;
     }
 
@@ -44,11 +43,6 @@ public class PhotoBuilder {
         return this;
     }
 
-    public PhotoBuilder setPhotoBaseUrl(String photoBaseUrl) {
-        this.photoBaseUrl = photoBaseUrl;
-        return this;
-    }
-
     public PhotoBuilder setCategories(List<UUID> categories) {
         this.categories = categories;
         return this;
@@ -56,6 +50,6 @@ public class PhotoBuilder {
 
     public Photo build() {
         LocalDateTime modifiedTimeToSave = modifiedDateTime == null ? createdDateTime : modifiedDateTime;
-        return new Photo(photoId, title, photoThumbnailUrl, photoDescription, createdDateTime, modifiedTimeToSave, photoBaseUrl, categories);
+        return new Photo(photoId, title, uploadId, photoDescription, createdDateTime, modifiedTimeToSave, categories);
     }
 }

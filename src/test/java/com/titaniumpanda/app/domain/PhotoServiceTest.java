@@ -1,6 +1,8 @@
 package com.titaniumpanda.app.domain;
 
 import com.titaniumpanda.app.api.category.CategoryDto;
+import com.titaniumpanda.app.api.external.PhotoUploadBatch;
+import com.titaniumpanda.app.api.external.PhotoUploadDetail;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
@@ -24,6 +26,7 @@ public class PhotoServiceTest {
 
     private static final UUID PHOTO_ID = UUID.randomUUID();
     private static final UUID CATEGORY_ID = UUID.randomUUID();
+    private static final UUID UPLOAD_ID = UUID.randomUUID();
     private static final List<UUID> CATEGORY_IDS = List.of(CATEGORY_ID);
     private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.now();
@@ -40,21 +43,21 @@ public class PhotoServiceTest {
     private final UUID photoId1 = UUID.randomUUID();
     private final UUID photoId2 = UUID.randomUUID();
     private final UUID photoId3 = UUID.randomUUID();
-    private final Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-    private final Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-    private final Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final Photo photo1 = new Photo(photoId1, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+    private final Photo photo2 = new Photo(photoId2, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+    private final Photo photo3 = new Photo(photoId3, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
     private final List<Photo> photoList = List.of(photo1, photo2, photo3);
-    private final PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-    private final PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-    private final PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+    private final PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+    private final PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
     private final List<PhotoDto> photoDtos = List.of(photoDto1, photoDto2, photoDto3);
 
     private final PhotoService underTest = new PhotoService(photoFactory, photoRepository, photoUploadResource, categoryService);
 
     @Test
     public void shouldReturnPhotoDto() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
         when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
         when(photoFactory.convertToDto(photo)).thenReturn(photoDto);
         assertThat(underTest.findPhotoBy(PHOTO_ID), is(Optional.of(photoDto)));
@@ -68,9 +71,9 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldReturnListOfPhotoDtoObjects() {
-        PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
 
         when(photoRepository.findAll()).thenReturn(photoList);
         when(photoFactory.convertToDto(photo1)).thenReturn(photoDto1);
@@ -99,17 +102,16 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldReturnPhotoDtoOnSuccess() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
 
-        String photoThumbnailUrl = "/thisIsWhereTheThumbnailLives";
-        String photoBaseUrl = "/thisIsWhereTheImageIsLocated";
         PhotoRequestMetadata metadata = new PhotoRequestMetadata("photoTitle", "photoDescription", emptyList());
         MockMultipartFile photoFile = new MockMultipartFile("photo", "photo".getBytes());
-        PhotoUploadDetails photoUploadDetails = new PhotoUploadDetails(photoThumbnailUrl, photoBaseUrl);
+        PhotoUploadBatch photoUploadBatch = new PhotoUploadBatch(UUID.randomUUID(), emptyList(), "jpeg");
+        PhotoUploadDetail photoUploadDetail = new PhotoUploadDetail(true, photoUploadBatch.getUploadId(), photoUploadBatch.getFileKey());
 
-        when(photoUploadResource.upload(photoFile)).thenReturn(Optional.of(photoUploadDetails));
-        when(photoFactory.createNewPhoto(photoUploadDetails, metadata)).thenReturn(photo);
+        when(photoUploadResource.uploadSet(photoFile)).thenReturn(Optional.of(photoUploadDetail));
+        when(photoFactory.createNewPhoto(photoUploadDetail, metadata)).thenReturn(photo);
         when(photoRepository.save(photo)).thenReturn(photo);
         when(photoFactory.convertToDto(photo)).thenReturn(photoDto);
 
@@ -140,9 +142,9 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldReturnPhotoDtoWithNewCategory() {
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
-        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), PHOTO_BASE_URL, CATEGORY_IDS);
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, emptyList());
+        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), CATEGORY_IDS);
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
 
         when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
         when(photoFactory.updatePhotoWithNewCategory(photo, CATEGORY_ID)).thenReturn(modifiedPhoto);
@@ -158,8 +160,8 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldNotAddCategoryIfAlreadyAdded() {
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), CATEGORY_IDS);
 
         when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
         when(categoryService.findById(CATEGORY_ID)).thenReturn(Optional.of(categoryDto));
@@ -173,8 +175,8 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldNotAddCategoryIfItDoesNotExist() {
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
-        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, emptyList());
+        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), CATEGORY_IDS);
 
         when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
         when(categoryService.findById(CATEGORY_ID)).thenReturn(Optional.empty());
@@ -191,9 +193,9 @@ public class PhotoServiceTest {
 
     @Test
     public void shouldReturnPhotoDtoWithCategoryRemoved() {
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), PHOTO_BASE_URL, emptyList());
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo modifiedPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), emptyList());
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, emptyList());
 
         when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
         when(photoFactory.updatePhotoWithCategoryRemoved(photo, CATEGORY_ID)).thenReturn(modifiedPhoto);
@@ -211,9 +213,9 @@ public class PhotoServiceTest {
         String updatedDescription = "new description";
         String updatedTitle = "new name";
         PhotoUpdateRequest photoUpdateRequest = new PhotoUpdateRequest(PHOTO_ID, updatedTitle, updatedDescription);
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, updatedTitle, PHOTO_THUMBNAIL_URL, updatedDescription, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo updatedPhoto = new Photo(PHOTO_ID, updatedTitle, PHOTO_THUMBNAIL_URL, updatedDescription, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, updatedTitle, UPLOAD_ID, updatedDescription, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo updatedPhoto = new Photo(PHOTO_ID, updatedTitle, UPLOAD_ID, updatedDescription, CREATED_DATE_TIME, MODIFIED_DATE_TIME.plusDays(1), CATEGORY_IDS);
 
         when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(photo));
         when(photoFactory.updatePhoto(photo, photoUpdateRequest)).thenReturn(updatedPhoto);

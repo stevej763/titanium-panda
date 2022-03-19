@@ -1,5 +1,6 @@
 package com.titaniumpanda.app.domain;
 
+import com.titaniumpanda.app.api.external.PhotoUploadDetail;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 import com.titaniumpanda.app.api.photo.PhotoUpdateRequest;
@@ -20,24 +21,22 @@ public class PhotoFactory {
     public PhotoDto convertToDto(Photo photo) {
         return new PhotoDto(photo.getPhotoId(),
                 photo.getPhotoTitle(),
-                photo.getPhotoThumbnailUrl(),
+                photo.getUploadId(),
                 photo.getDescription(),
                 photo.getCreatedDateTime(),
                 photo.getModifiedDateTime(),
-                photo.getPhotoBaseUrl(),
                 photo.getCategoryIds());
     }
 
-    public Photo createNewPhoto(PhotoUploadDetails photoUploadDetails, PhotoRequestMetadata photoRequestMetadata) {
+    public Photo createNewPhoto(PhotoUploadDetail photoUploadDetail, PhotoRequestMetadata photoRequestMetadata) {
         LocalDateTime createdDateTime = LocalDateTime.now();
         UUID newPhotoId = idService.createNewId();
         return new Photo(newPhotoId,
                 photoRequestMetadata.getTitle(),
-                photoUploadDetails.getThumbnailUrl(),
+                photoUploadDetail.getUploadId(),
                 photoRequestMetadata.getDescription(),
                 createdDateTime,
                 createdDateTime,
-                photoUploadDetails.getPhotoUrl(),
                 photoRequestMetadata.getCategoryIds());
     }
 
@@ -47,11 +46,10 @@ public class PhotoFactory {
         categoryIds.add(categoryId);
         return new Photo(photo.getPhotoId(),
                 photo.getPhotoTitle(),
-                photo.getPhotoThumbnailUrl(),
+                photo.getUploadId(),
                 photo.getDescription(),
                 photo.getCreatedDateTime(),
                 modifiedDateTime,
-                photo.getPhotoBaseUrl(),
                 categoryIds);
     }
 
@@ -61,11 +59,10 @@ public class PhotoFactory {
         LocalDateTime modifiedDateTime = LocalDateTime.now();
         return new Photo(photo.getPhotoId(),
                 photo.getPhotoTitle(),
-                photo.getPhotoThumbnailUrl(),
+                photo.getUploadId(),
                 photo.getDescription(),
                 photo.getCreatedDateTime(),
                 modifiedDateTime,
-                photo.getPhotoBaseUrl(),
                 categoryIds);
     }
 
@@ -75,11 +72,10 @@ public class PhotoFactory {
         String updatedPhotoDescription = photoUpdateRequest.getPhotoDescription();
         return new Photo(photo.getPhotoId(),
                 updatedPhotoTitle == null ? photo.getPhotoTitle() : updatedPhotoTitle,
-                photo.getPhotoThumbnailUrl(),
+                photo.getUploadId(),
                 updatedPhotoDescription == null ? photo.getPhotoTitle() : updatedPhotoDescription,
                 photo.getCreatedDateTime(),
                 modifiedDateTime,
-                photo.getPhotoBaseUrl(),
                 photo.getCategoryIds());
     }
 }

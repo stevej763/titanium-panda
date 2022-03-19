@@ -6,10 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Optional;
 
 public class FileConversionService {
@@ -33,20 +30,30 @@ public class FileConversionService {
         }
     }
 
-    public byte[] convertBufferedImageToByteArray(BufferedImage result, String fileFormat) {
+    public byte[] convertBufferedImageToByteArray(BufferedImage bufferedImage, String fileFormat) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            convertImageToOutputStream(result, outputStream, fileFormat);
+            ImageIO.write(bufferedImage, fileFormat, outputStream);
         } catch (IOException exception) {
             LOGGER.error("exception thrown when converting processed image to output stream message={}", exception.getMessage());
         }
         return outputStream.toByteArray();
     }
 
-    private void convertImageToOutputStream(BufferedImage result, ByteArrayOutputStream outputStream, String fileFormat) throws IOException {
-        boolean didWrite = ImageIO.write(result, fileFormat, outputStream);
-        if (!didWrite) {
-            throw new IOException("failed writing buffered image to output stream");
+    public byte[] convertFileToByteArray(File imageFile) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(imageFile);
+
+            byte[] byteArray = new byte[(int)imageFile.length()];
+
+            fileInputStream.read(byteArray);
+            fileInputStream.close();
+
+            return byteArray;
+        } catch (IOException exception) {
+            LOGGER.error("exception thrown when converting processed image to output stream message={}", exception.getMessage());
+            return new byte[0];
         }
     }
+
 }

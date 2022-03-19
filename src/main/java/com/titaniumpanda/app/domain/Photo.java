@@ -19,28 +19,25 @@ public class Photo {
     private final UUID photoId;
     @Indexed(unique=true)
     private final String title;
-    private final String photoThumbnailUrl;
+    private final UUID uploadId;
     private final String description;
     private final LocalDateTime createdDateTime;
     private final LocalDateTime modifiedDateTime;
-    private final String photoBaseUrl;
     private final List<UUID> categoryIds;
 
     public Photo(@JsonProperty("photoId") UUID photoId,
                  @JsonProperty("title") String title,
-                 @JsonProperty("photoThumbnailUrl") String photoThumbnailUrl,
+                 @JsonProperty("uploadId") UUID uploadId,
                  @JsonProperty("description") String description,
                  @JsonProperty("createdDateTime") LocalDateTime createdDateTime,
                  @JsonProperty("modifiedDateTime") LocalDateTime modifiedDateTime,
-                 @JsonProperty("photoBaseUrl") String photoBaseUrl,
                  @JsonProperty("categoryIds") List<UUID> categoryIds) {
         this.photoId = photoId;
         this.title = title;
-        this.photoThumbnailUrl = photoThumbnailUrl;
+        this.uploadId = uploadId;
         this.description = description;
         this.createdDateTime = createdDateTime;
         this.modifiedDateTime = modifiedDateTime;
-        this.photoBaseUrl = photoBaseUrl;
         this.categoryIds = categoryIds;
     }
 
@@ -52,8 +49,8 @@ public class Photo {
         return title;
     }
 
-    public String getPhotoThumbnailUrl() {
-        return photoThumbnailUrl;
+    public UUID getUploadId() {
+        return uploadId;
     }
 
     public String getDescription() {
@@ -66,10 +63,6 @@ public class Photo {
 
     public LocalDateTime getModifiedDateTime() {
         return modifiedDateTime;
-    }
-
-    public String getPhotoBaseUrl() {
-        return photoBaseUrl;
     }
 
     public List<UUID> getCategoryIds() {

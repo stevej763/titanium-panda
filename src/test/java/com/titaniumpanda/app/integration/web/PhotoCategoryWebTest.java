@@ -24,12 +24,11 @@ public class PhotoCategoryWebTest extends AbstractWebTest {
 
     private static final UUID CATEGORY_ID = UUID.randomUUID();
     private static final UUID PHOTO_ID = UUID.randomUUID();
+    private static final UUID UPLOAD_ID = UUID.randomUUID();
     private static final List<UUID> CATEGORY_IDS = List.of(CATEGORY_ID);
-    private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final String PHOTO_DESCRIPTION = "PhotoResourceWebTest";
-    private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -44,7 +43,7 @@ public class PhotoCategoryWebTest extends AbstractWebTest {
 
     @Test
     public void shouldAddPhotoToCategory() {
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, emptyList());
         Category category = new Category(CATEGORY_ID, "name", "description", CREATED_DATE_TIME, MODIFIED_DATE_TIME);
 
         mongoTestTemplate.save(photo);
@@ -57,7 +56,7 @@ public class PhotoCategoryWebTest extends AbstractWebTest {
 
     @Test
     public void shouldRemovePhotoFromCategory() {
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
         Category category = new Category(CATEGORY_ID, "name", "description", CREATED_DATE_TIME, MODIFIED_DATE_TIME);
 
         mongoTestTemplate.save(photo);
@@ -74,19 +73,19 @@ public class PhotoCategoryWebTest extends AbstractWebTest {
         UUID photoId2 = UUID.randomUUID();
         UUID photoId3 = UUID.randomUUID();
         UUID photoId4 = UUID.randomUUID();
-        Photo photo1 = new Photo(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo photo2 = new Photo(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo photo3 = new Photo(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo photo4 = new Photo(photoId4, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        Photo photo1 = new Photo(photoId1, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo photo2 = new Photo(photoId2, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo photo3 = new Photo(photoId3, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo photo4 = new Photo(photoId4, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, emptyList());
 
         mongoTestTemplate.save(photo1);
         mongoTestTemplate.save(photo2);
         mongoTestTemplate.save(photo3);
         mongoTestTemplate.save(photo4);
 
-        PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoDto photoDto1 = new PhotoDto(photoId1, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        PhotoDto photoDto2 = new PhotoDto(photoId2, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        PhotoDto photoDto3 = new PhotoDto(photoId3, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
 
         String url = localhostWithPort + String.format("/api/photo/category/%s", CATEGORY_ID);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);

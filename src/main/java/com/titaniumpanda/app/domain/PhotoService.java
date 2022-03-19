@@ -1,5 +1,6 @@
 package com.titaniumpanda.app.domain;
 
+import com.titaniumpanda.app.api.external.PhotoUploadDetail;
 import com.titaniumpanda.app.api.external.PhotoUploadResource;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class PhotoService {
 
-    Logger LOGGER = LoggerFactory.getLogger(PhotoService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PhotoService.class);
 
     @Autowired
     private final PhotoFactory photoFactory;
@@ -47,10 +48,10 @@ public class PhotoService {
     }
 
     public Optional<PhotoDto> save(MultipartFile photoFile, PhotoRequestMetadata photoRequestMetadata) {
-        Optional<PhotoUploadDetails> optionalPhotoUploadDetails = photoUploadResource.upload(photoFile);
-        if (optionalPhotoUploadDetails.isPresent()) {
-            PhotoUploadDetails photoUploadDetails = optionalPhotoUploadDetails.get();
-            Photo persistedPhoto = photoFactory.createNewPhoto(photoUploadDetails, photoRequestMetadata);
+        Optional<PhotoUploadDetail> optionalPhotoUploadDetail = photoUploadResource.uploadSet(photoFile);
+        if (optionalPhotoUploadDetail.isPresent()) {
+            PhotoUploadDetail photoUploadDetail = optionalPhotoUploadDetail.get();
+            Photo persistedPhoto = photoFactory.createNewPhoto(photoUploadDetail, photoRequestMetadata);
             Photo result = photoRepository.save(persistedPhoto);
             LOGGER.info("photo saved photoId={} photoTitle={}", result.getPhotoId(), result.getPhotoTitle());
             return Optional.of(photoFactory.convertToDto(result));

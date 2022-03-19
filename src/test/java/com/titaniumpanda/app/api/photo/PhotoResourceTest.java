@@ -25,6 +25,7 @@ public class PhotoResourceTest {
 
     private static final UUID PHOTO_ID = UUID.randomUUID();
     private static final UUID CATEGORY_ID = UUID.randomUUID();
+    private static final UUID UPLOAD_ID = UUID.randomUUID();
     private static final List<UUID> CATEGORY_IDS = List.of(CATEGORY_ID);
     private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.now();
@@ -40,7 +41,7 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnPhoto() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, "title", "photoUrl", "description", null, null, null, null);
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
 
         when(photoService.findPhotoBy(PHOTO_ID)).thenReturn(Optional.of(photoDto));
 
@@ -65,9 +66,9 @@ public class PhotoResourceTest {
         UUID photoId2 = UUID.randomUUID();
         UUID photoId3 = UUID.randomUUID();
         List<PhotoDto> photoDtos = List.of(
-                new PhotoDto(photoId1, "title", "photoUrl", "description", null, null, null, null),
-                new PhotoDto(photoId2, "title", "photoUrl", "description", null, null, null, null),
-                new PhotoDto(photoId3, "title", "photoUrl", "description", null, null, null, null));
+                new PhotoDto(photoId1, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS),
+                new PhotoDto(photoId2, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS),
+                new PhotoDto(photoId3, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS));
 
         when(photoService.findAll()).thenReturn(photoDtos);
 
@@ -91,9 +92,9 @@ public class PhotoResourceTest {
         UUID photoId2 = UUID.randomUUID();
         UUID photoId3 = UUID.randomUUID();
         List<PhotoDto> photoDtos = List.of(
-                new PhotoDto(photoId1, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
-                new PhotoDto(photoId2, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS),
-                new PhotoDto(photoId3, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS));
+                new PhotoDto(photoId1, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS),
+                new PhotoDto(photoId2, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS),
+                new PhotoDto(photoId3, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS));
 
         when(photoService.findByCategoryId(CATEGORY_ID)).thenReturn(photoDtos);
 
@@ -104,7 +105,7 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnSavedPhotoOnSuccessfulPost() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoDto photoDto =  new PhotoDto(PHOTO_ID, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
         PhotoRequestMetadata photoUploadDetails = new PhotoRequestMetadata(PHOTO_TITLE, PHOTO_DESCRIPTION, CATEGORY_IDS);
 
         when(photoService.save(mockPhotoFile, photoUploadDetails)).thenReturn(Optional.of(photoDto));
@@ -121,7 +122,7 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnUpdatedPhotoWithNewCategory() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        PhotoDto photoDto =  new PhotoDto(PHOTO_ID, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
         when(photoService.addPhotoToCategory(PHOTO_ID, CATEGORY_ID)).thenReturn(Optional.of(photoDto));
 
         ResponseEntity<PhotoDto> result = underTest.addPhotoToCategory(PHOTO_ID, CATEGORY_ID);
@@ -130,7 +131,7 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldReturnUpdatedPhotoWithRemovedCategory() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        PhotoDto photoDto =  new PhotoDto(PHOTO_ID, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
         when(photoService.removePhotoFromCategory(PHOTO_ID, CATEGORY_ID)).thenReturn(Optional.of(photoDto));
 
         ResponseEntity<PhotoDto> result = underTest.removePhotoFromCategory(PHOTO_ID, CATEGORY_ID);
@@ -171,7 +172,7 @@ public class PhotoResourceTest {
 
     @Test
     public void shouldUpdatePhoto() {
-        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, PHOTO_THUMBNAIL_URL, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, PHOTO_BASE_URL, emptyList());
+        PhotoDto photoDto =  new PhotoDto(PHOTO_ID, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
         PhotoUpdateRequest photoUpdateRequest = new PhotoUpdateRequest(UUID.randomUUID(), PHOTO_TITLE, PHOTO_DESCRIPTION);
 
         when(photoService.updatePhoto(photoUpdateRequest)).thenReturn(Optional.of(photoDto));

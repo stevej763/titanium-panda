@@ -18,20 +18,18 @@ public class PhotoBuilderTest {
 
         LocalDateTime createdDateTime = LocalDateTime.now();
         UUID photoId = UUID.randomUUID();
+        UUID uploadId = UUID.randomUUID();
         String title = "title";
-        String thumbnail = "thumbnail";
         String description = "description";
-        String url_base = "url base";
         Photo result = underTest.setPhotoId(photoId)
                 .setTitle(title)
-                .setPhotoThumbnail(thumbnail)
+                .setUploadId(uploadId)
                 .setPhotoDescription(description)
                 .setCreatedDateTime(createdDateTime)
-                .setPhotoBaseUrl(url_base)
                 .setCategories(emptyList())
                 .build();
 
-        Photo expected = new Photo(photoId, title, thumbnail, description, createdDateTime, createdDateTime, url_base, emptyList());
+        Photo expected = new Photo(photoId, title, uploadId, description, createdDateTime, createdDateTime, emptyList());
 
         assertThat(result, is(expected));
     }

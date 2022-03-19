@@ -1,21 +1,25 @@
 package com.titaniumpanda.app.api.external;
 
 import com.titaniumpanda.app.domain.FileHandler;
-import com.titaniumpanda.app.domain.PhotoUploadDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PhotoUploadResource {
+
+    private static final String JPEG_SUFFIX = "jpeg";
 
     Logger LOGGER = LoggerFactory.getLogger(PhotoUploadResource.class);
 
     @Autowired
-    private final FileHandler<PhotoUploadDetails> fileHandler;
+    private final FileHandler<PhotoUploadDetail> fileHandler;
     @Autowired
     private final FileConversionService fileConversionService;
     @Autowired
@@ -29,24 +33,29 @@ public class PhotoUploadResource {
         this.fileUploadPreparationService = fileUploadPreparationService;
     }
 
-    public Optional<PhotoUploadDetails> upload(MultipartFile photo) {
+    public Optional<PhotoUploadDetail> uploadSet(MultipartFile photo) {
         Optional<File> convertedFile = fileConversionService.convertUploadedPhotoToFile(photo);
         if (convertedFile.isPresent()) {
             File imageFile = convertedFile.get();
-            Optional<PhotoUploadDetails> photoUploadDetails = uploadFile(imageFile, "jpeg");
+            Optional<PhotoUploadDetail> photoUploadDetail = uploadFileForEachResolution(imageFile);
             cleanup(imageFile);
-            return photoUploadDetails;
+            return photoUploadDetail;
         }
         return Optional.empty();
     }
 
-    private Optional<PhotoUploadDetails> uploadFile(File imageFile, String fileFormat) {
-        Optional<PhotoUploadWrapper> optionalPhotoUploadWrapper = fileUploadPreparationService.prepareImage(imageFile, fileFormat);
-        if(optionalPhotoUploadWrapper.isPresent()) {
-            PhotoUploadWrapper photoUploadWrapper = optionalPhotoUploadWrapper.get();
-            return fileHandler.uploadFile(photoUploadWrapper);
+    private Optional<PhotoUploadDetail> uploadFileForEachResolution(File imageFile) {
+        List<PhotoUploadWrapper> photoUploadWrapperList = Arrays.stream(PhotoResolution.values())
+                .map(resolution ->  fileUploadPreparationService.prepareImage(imageFile, JPEG_SUFFIX, resolution))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        PhotoUploadDetail photoUploadDetail = fileHandler.uploadFiles(photoUploadWrapperList, JPEG_SUFFIX);
+        if (photoUploadDetail.isSuccess()) {
+            return Optional.of(photoUploadDetail);
         } else {
-            LOGGER.error("No photo upload wrapper returned from fileUploadPreparationService");
+            LOGGER.error("one or more files failed to upload, uploadId={}", photoUploadDetail.getUploadId());
             return Optional.empty();
         }
     }

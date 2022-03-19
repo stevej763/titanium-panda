@@ -2,15 +2,12 @@ package com.titaniumpanda.app.api.external;
 
 import com.titaniumpanda.app.domain.FileHandler;
 import com.titaniumpanda.app.domain.IdService;
-import com.titaniumpanda.app.domain.PhotoUploadDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Optional;
+import java.util.List;
+import java.util.UUID;
 
-public class AwsPhotoFileHandler implements FileHandler<PhotoUploadDetails> {
+public class AwsPhotoFileHandler implements FileHandler<PhotoUploadDetail> {
 
     private final IdService idService;
     @Autowired
@@ -22,27 +19,9 @@ public class AwsPhotoFileHandler implements FileHandler<PhotoUploadDetails> {
     }
 
     @Override
-    public Optional<PhotoUploadDetails> uploadFile(PhotoUploadWrapper photo) {
-        return uploadPhoto(photo.getInputStream(), photo.getContentLength());
-    }
-
-    @Override
-    public Optional<PhotoUploadDetails> uploadFile(InputStream file, int fileLength) {
-        return uploadPhoto(file, fileLength);
-    }
-
-    @Override
-    public Optional<PhotoUploadDetails> uploadFile(MultipartFile file) {
-        try{
-            InputStream inputStream = file.getInputStream();
-            return uploadPhoto(inputStream, file.getSize());
-        } catch (IOException e) {
-            return Optional.empty();
-        }
-    }
-
-    private Optional<PhotoUploadDetails> uploadPhoto(InputStream inputStream, long fileSize) {
-        String fileKey = idService.createNewId() + ".jpeg";
-        return s3ClientDelegate.upload(fileKey, inputStream, fileSize);
+    public PhotoUploadDetail uploadFiles(List<PhotoUploadWrapper> photoUploadWrappers, String fileFormat) {
+        UUID uploadId = idService.createNewId();
+        PhotoUploadBatch batch = new PhotoUploadBatch(uploadId, photoUploadWrappers, fileFormat);
+        return s3ClientDelegate.uploadBatch(batch);
     }
 }

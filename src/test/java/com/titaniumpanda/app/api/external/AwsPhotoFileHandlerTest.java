@@ -1,19 +1,17 @@
 package com.titaniumpanda.app.api.external;
 
 import com.titaniumpanda.app.domain.IdService;
-import com.titaniumpanda.app.domain.PhotoUploadDetails;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,17 +24,18 @@ public class AwsPhotoFileHandlerTest {
     private final MockMultipartFile multipartFile = new MockMultipartFile("bytes", bytes);
     private final UUID s3UploadId = UUID.randomUUID();
     private final String fileKey = s3UploadId + ".jpeg";
-    private final PhotoUploadDetails photoUploadDetails = new PhotoUploadDetails(fileKey, fileKey);
+    private final PhotoUploadDetail photoUploadDetail = new PhotoUploadDetail(true, UUID.randomUUID(), fileKey);
 
     private final AwsPhotoFileHandler underTest = new AwsPhotoFileHandler(idService, s3ClientDelegate);
 
     @Test
-    public void shouldReturnPhotoUploadDetailsOnSuccess() {
+    public void shouldReturnPhotoUploadDetailOnSuccess() throws IOException {
         when(idService.createNewId()).thenReturn(s3UploadId);
-        when(s3ClientDelegate.upload(eq(fileKey), any(InputStream.class), eq(multipartFile.getSize()))).thenReturn(Optional.of(photoUploadDetails));
-        Optional<PhotoUploadDetails> result = underTest.uploadFile(multipartFile);
+        when(s3ClientDelegate.uploadBatch(any(PhotoUploadBatch.class))).thenReturn(photoUploadDetail);
 
-        assertThat(result, is(Optional.of(photoUploadDetails)));
+        PhotoUploadDetail result = underTest.uploadFiles(List.of(new PhotoUploadWrapper(multipartFile.getInputStream(), bytes.length, PhotoResolution.THUMBNAIL)), ".jpeg");
+
+        assertThat(result, is(photoUploadDetail));
     }
 
 }

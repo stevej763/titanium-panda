@@ -10,11 +10,12 @@ public class PhotoUploadWrapper {
 
     private final InputStream inputStream;
     private final int contentLength;
+    private final PhotoResolution resolution;
 
-    public PhotoUploadWrapper(InputStream inputStream, int contentLength) {
-
+    public PhotoUploadWrapper(InputStream inputStream, int contentLength, PhotoResolution resolution) {
         this.inputStream = inputStream;
         this.contentLength = contentLength;
+        this.resolution = resolution;
     }
 
     public InputStream getInputStream() {
@@ -23,6 +24,10 @@ public class PhotoUploadWrapper {
 
     public int getContentLength() {
         return contentLength;
+    }
+
+    public PhotoResolution getResolution() {
+        return resolution;
     }
 
     @Override

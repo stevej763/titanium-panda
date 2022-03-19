@@ -15,12 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.titaniumpanda.app.api.external.PhotoResolution.THUMBNAIL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -40,7 +40,6 @@ public class S3IntegrationTest extends AbstractWebTest {
     }
 
     private final String photoTitle = UUID.randomUUID().toString();
-    private final byte[] bytes = photoTitle.getBytes(StandardCharsets.UTF_8);
 
     @Test
     public void shouldSuccessfullySavePhoto() throws IOException {
@@ -59,9 +58,10 @@ public class S3IntegrationTest extends AbstractWebTest {
 
         PhotoDto result = savedPhoto.get();
 
-        String photoUrl = result.getPhotoBaseUrl();
-        System.out.println(photoUrl);
-        ResponseEntity<String> response = restTemplate.getForEntity(photoUrl, String.class);
+        UUID uploadId = result.getUploadId();
+        String filePath = THUMBNAIL.getFolder() +  "/" + uploadId + ".jpeg";
+        String url = s3Client.getUrl(environment.getProperty("s3.bucketName"), filePath).toString();
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.hasBody(), is(true));

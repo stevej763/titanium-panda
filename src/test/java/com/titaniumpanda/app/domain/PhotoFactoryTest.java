@@ -1,5 +1,6 @@
 package com.titaniumpanda.app.domain;
 
+import com.titaniumpanda.app.api.external.PhotoUploadDetail;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.api.photo.PhotoRequestMetadata;
 import com.titaniumpanda.app.api.photo.PhotoUpdateRequest;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.when;
 public class PhotoFactoryTest {
 
     private static final UUID PHOTO_ID = UUID.randomUUID();
+    private static final UUID UPLOAD_ID = UUID.randomUUID();
     private static final String TITLE = "title";
     private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String DESCRIPTION = "description";
@@ -29,8 +31,8 @@ public class PhotoFactoryTest {
     private final IdService idService = mock(IdService.class);
     private final PhotoFactory underTest = new PhotoFactory(idService);
 
-    private final Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-    private final PhotoDto dto = new PhotoDto(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+    private final Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, CATEGORY_IDS);
+    private final PhotoDto dto = new PhotoDto(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, CATEGORY_IDS);
 
     @Test
     public void shouldConvertToDto() {
@@ -40,11 +42,11 @@ public class PhotoFactoryTest {
     @Test
     public void shouldCreateANewPhoto() {
         PhotoRequestMetadata metadata = new PhotoRequestMetadata(TITLE, DESCRIPTION, CATEGORY_IDS);
-        PhotoUploadDetails photoUploadDetails = new PhotoUploadDetails(PHOTO_THUMBNAIL_URL, PHOTO_BASE_URL);
+        PhotoUploadDetail photoUploadDetail = new PhotoUploadDetail(true, UUID.randomUUID(), "key");
 
         when(idService.createNewId()).thenReturn(PHOTO_ID);
 
-        Photo result = underTest.createNewPhoto(photoUploadDetails, metadata);
+        Photo result = underTest.createNewPhoto(photoUploadDetail, metadata);
 
         assertThat(result.getPhotoId(), is(photo.getPhotoId()));
     }
@@ -54,8 +56,8 @@ public class PhotoFactoryTest {
         String updatedTitle = "new title";
         String updatedDescription = "new description";
         PhotoUpdateRequest updateRequest = new PhotoUpdateRequest(PHOTO_ID, updatedTitle, updatedDescription);
-        Photo oldPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo updatedPhoto = new Photo(PHOTO_ID, updatedTitle, PHOTO_THUMBNAIL_URL, updatedDescription, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo oldPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, CATEGORY_IDS);
+        Photo updatedPhoto = new Photo(PHOTO_ID, updatedTitle, UPLOAD_ID, updatedDescription, LOCAL_DATE_TIME, LOCAL_DATE_TIME, CATEGORY_IDS);
 
         Photo result = underTest.updatePhoto(oldPhoto, updateRequest);
 
@@ -67,8 +69,8 @@ public class PhotoFactoryTest {
 
     @Test
     public void shouldReturnUpdatedPhotoWithCategoryIdInserted() {
-        Photo oldPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, Collections.emptyList());
-        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
+        Photo oldPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, Collections.emptyList());
+        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, CATEGORY_IDS);
 
         Photo result = underTest.updatePhotoWithNewCategory(oldPhoto, CATEGORY_ID);
 
@@ -79,8 +81,8 @@ public class PhotoFactoryTest {
 
     @Test
     public void shouldReturnUpdatedPhotoWithCategoryIdRemoved() {
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, CATEGORY_IDS);
-        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, Collections.emptyList());
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, CATEGORY_IDS);
+        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, Collections.emptyList());
 
         Photo result = underTest.updatePhotoWithCategoryRemoved(photo, CATEGORY_ID);
 
@@ -96,8 +98,8 @@ public class PhotoFactoryTest {
         UUID category3 = UUID.randomUUID();
         List<UUID> oldCategories = List.of(category1, category2, category3);
         List<UUID> updatedCategories = List.of(category1, category2);
-        Photo photo = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, oldCategories);
-        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, updatedCategories);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, oldCategories);
+        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, updatedCategories);
 
         Photo result = underTest.updatePhotoWithCategoryRemoved(photo, category3);
 
@@ -113,8 +115,8 @@ public class PhotoFactoryTest {
         UUID category3 = UUID.randomUUID();
         List<UUID> oldCategories = List.of(category1, category2);
         List<UUID> updatedCategories = List.of(category1, category2, category3);
-        Photo oldPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, oldCategories);
-        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, PHOTO_THUMBNAIL_URL, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, PHOTO_BASE_URL, updatedCategories);
+        Photo oldPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, oldCategories);
+        Photo updatedPhoto = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, DESCRIPTION, LOCAL_DATE_TIME, LOCAL_DATE_TIME, updatedCategories);
 
         Photo result = underTest.updatePhotoWithNewCategory(oldPhoto, category3);
 

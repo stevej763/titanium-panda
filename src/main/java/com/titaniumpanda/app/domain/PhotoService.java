@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -141,5 +142,11 @@ public class PhotoService {
         } else {
             return Optional.empty();
         }
+    }
+
+    public Optional<PhotoDto> findRandomPhotoForCategory(UUID categoryId) {
+        List<PhotoDto> photosForCategory = photoRepository.findByCategoryId(categoryId).stream().map(photoFactory::convertToDto).collect(Collectors.toList());
+        int randomIndex = new Random().nextInt(photosForCategory.size());
+        return Optional.of(photosForCategory.get(randomIndex));
     }
 }

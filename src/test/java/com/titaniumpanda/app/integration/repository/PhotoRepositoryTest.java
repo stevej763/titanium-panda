@@ -22,7 +22,6 @@ public class PhotoRepositoryTest extends AbstractMongoRepositoryTest {
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final String PHOTO_DESCRIPTION = "PhotoRepositoryTest";
-    private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
     private final UUID photoId1 = UUID.randomUUID();
     private final UUID photoId2 = UUID.randomUUID();

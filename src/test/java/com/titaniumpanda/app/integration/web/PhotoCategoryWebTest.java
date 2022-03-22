@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.titaniumpanda.app.api.photo.PhotoDto;
 import com.titaniumpanda.app.domain.Category;
 import com.titaniumpanda.app.domain.Photo;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,10 @@ public class PhotoCategoryWebTest extends AbstractWebTest {
 
     private String localhostWithPort;
 
+    @BeforeAll
+    static void beforeAll() {
+        collectionName = "photo";
+    }
 
     @BeforeEach
     void setUp() {
@@ -91,6 +96,20 @@ public class PhotoCategoryWebTest extends AbstractWebTest {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
         String expected = objectMapper.writeValueAsString(List.of(photoDto1, photoDto2, photoDto3));
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(responseEntity.getBody(), is(expected));
+    }
+
+    @Test
+    public void shouldReturnRandomPhotoForCategory() throws JsonProcessingException {
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        mongoTestTemplate.save(photo);
+
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+
+        String url = localhostWithPort + String.format("/api/photo/category/%s/random", CATEGORY_ID);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        String expected = objectMapper.writeValueAsString(photoDto);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(responseEntity.getBody(), is(expected));
     }

@@ -182,4 +182,15 @@ public class PhotoResourceTest {
         assertThat(result.getStatusCode(), Is.is(OK));
         assertThat(result.getBody(), Is.is(photoDto));
     }
+
+    @Test
+    public void shouldReturnRandomPhotoForCategory() {
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, PHOTO_TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+
+        when(photoService.findRandomPhotoForCategory(CATEGORY_ID)).thenReturn(Optional.of(photoDto));
+
+        ResponseEntity<PhotoDto> result = underTest.getRandomPhotoForCategory(CATEGORY_ID);
+
+        assertThat(result.getBody(), is(photoDto));
+    }
 }

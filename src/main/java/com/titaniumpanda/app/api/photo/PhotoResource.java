@@ -31,11 +31,8 @@ public class PhotoResource {
     @GetMapping(value = "{photoId}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<PhotoDto> getPhoto(@PathVariable("photoId") UUID photoId) {
         Optional<PhotoDto> photoDto = photoService.findPhotoBy(photoId);
-        if (photoDto.isPresent()) {
-            return ResponseEntity.ok().body(photoDto.get());
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return photoDto.map(dto -> ResponseEntity.ok().body(dto))
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @DeleteMapping(value = "/delete/{photoId}")
@@ -64,9 +61,7 @@ public class PhotoResource {
     public ResponseEntity<PhotoDto> addPhoto(PhotoRequestMetadata photoRequestMetadata, MultipartFile photo) {
         Optional<PhotoDto> response = photoService.save(photo, photoRequestMetadata);
         if (response.isPresent()) {
-            PhotoDto photoDto = response.get();
-            String resourceLocation = PHOTO_RESOURCE_URL + "/" + photoDto.getPhotoId();
-            return ResponseEntity.created(URI.create(resourceLocation)).body(photoDto);
+            return ResponseEntity.created(URI.create(PHOTO_RESOURCE_URL + "/" + response.get().getPhotoId())).body(response.get());
         } else {
             return ResponseEntity.internalServerError().build();
         }
@@ -76,34 +71,29 @@ public class PhotoResource {
     public ResponseEntity<PhotoDto> addPhotoToCategory(@PathVariable("photoId") UUID photoId,
                                                        @PathVariable("categoryId") UUID categoryId) {
         Optional<PhotoDto> response = photoService.addPhotoToCategory(photoId, categoryId);
-        if (response.isPresent()) {
-            PhotoDto photoDto = response.get();
-            return ResponseEntity.ok().body(photoDto);
-        } else {
-            return ResponseEntity.internalServerError().build();
-        }
+        return response.map(photoDto -> ResponseEntity.ok().body(photoDto))
+                .orElseGet(() -> ResponseEntity.internalServerError().build());
     }
 
     @PostMapping(value = "/{photoId}/category/delete/{categoryId}")
     public ResponseEntity<PhotoDto> removePhotoFromCategory(@PathVariable("photoId") UUID photoId,
                                                             @PathVariable("categoryId") UUID categoryId) {
         Optional<PhotoDto> response = photoService.removePhotoFromCategory(photoId, categoryId);
-        if (response.isPresent()) {
-            PhotoDto photoDto = response.get();
-            return ResponseEntity.ok().body(photoDto);
-        } else {
-            return ResponseEntity.internalServerError().build();
-        }
+        return response.map(photoDto -> ResponseEntity.ok().body(photoDto))
+                .orElseGet(() -> ResponseEntity.internalServerError().build());
     }
 
     @PostMapping(value = "/update")
     public ResponseEntity<PhotoDto> updatePhoto(PhotoUpdateRequest photoUpdateRequest) {
         Optional<PhotoDto> response = photoService.updatePhoto(photoUpdateRequest);
-        if (response.isPresent()) {
-            PhotoDto updatedPhoto = response.get();
-            return ResponseEntity.ok().body(updatedPhoto);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return response.map(photoDto -> ResponseEntity.ok().body(photoDto))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @GetMapping(value = "/category/{categoryId}/random")
+    public ResponseEntity<PhotoDto> getRandomPhotoForCategory(@PathVariable("categoryId") UUID categoryId) {
+        Optional<PhotoDto> response = photoService.findRandomPhotoForCategory(categoryId);
+        return response.map(photoDto -> ResponseEntity.ok().body(photoDto))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 }

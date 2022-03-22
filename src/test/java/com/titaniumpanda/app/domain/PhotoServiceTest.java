@@ -28,11 +28,9 @@ public class PhotoServiceTest {
     private static final UUID CATEGORY_ID = UUID.randomUUID();
     private static final UUID UPLOAD_ID = UUID.randomUUID();
     private static final List<UUID> CATEGORY_IDS = List.of(CATEGORY_ID);
-    private static final String PHOTO_BASE_URL = "baseUrl";
     private static final LocalDateTime CREATED_DATE_TIME = LocalDateTime.now();
     private static final LocalDateTime MODIFIED_DATE_TIME = LocalDateTime.now();
     private static final String PHOTO_DESCRIPTION = "description";
-    private static final String PHOTO_THUMBNAIL_URL = "photoUrl";
     private static final String TITLE = "title";
     private final PhotoFactory photoFactory = mock(PhotoFactory.class);
     private final PhotoRepository photoRepository = mock(PhotoRepository.class);
@@ -224,5 +222,14 @@ public class PhotoServiceTest {
 
         Optional<PhotoDto> result = underTest.updatePhoto(photoUpdateRequest);
         assertThat(result, is(Optional.of(photoDto)));
+    }
+
+    @Test
+    public void shouldReturnRandomPhotoForCategory() {
+        PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        Photo photo = new Photo(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
+        when(photoRepository.findByCategoryId(CATEGORY_ID)).thenReturn(List.of(photo));
+        when(photoFactory.convertToDto(photo)).thenReturn(photoDto);
+        assertThat(underTest.findRandomPhotoForCategory(CATEGORY_ID), is(Optional.of(photoDto)));
     }
 }

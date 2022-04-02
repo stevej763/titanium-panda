@@ -90,7 +90,7 @@ public class PhotoResource {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @GetMapping(value = "/category/{categoryId}/random")
+    @GetMapping(value = "/random/{categoryId}")
     public ResponseEntity<PhotoDto> getRandomPhotoForCategory(@PathVariable("categoryId") UUID categoryId) {
         Optional<PhotoDto> response = photoService.findRandomPhotoForCategory(categoryId);
         return response.map(photoDto -> ResponseEntity.ok().body(photoDto))

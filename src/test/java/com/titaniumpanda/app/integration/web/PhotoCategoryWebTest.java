@@ -107,7 +107,7 @@ public class PhotoCategoryWebTest extends AbstractWebTest {
 
         PhotoDto photoDto = new PhotoDto(PHOTO_ID, TITLE, UPLOAD_ID, PHOTO_DESCRIPTION, CREATED_DATE_TIME, MODIFIED_DATE_TIME, CATEGORY_IDS);
 
-        String url = localhostWithPort + String.format("/api/photo/category/%s/random", CATEGORY_ID);
+        String url = localhostWithPort + String.format("/api/photo/random/%s", CATEGORY_ID);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String expected = objectMapper.writeValueAsString(photoDto);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));

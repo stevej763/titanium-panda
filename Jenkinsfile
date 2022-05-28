@@ -67,13 +67,11 @@ node {
     }
     stage('Upload image') {
         if (BRANCH_NAME == main_branch) {
-            withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-
-            }
             echo("Building docker image")
-            sh 'docker build .'
+            withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+                app = docker.build "stevej763/titanium:${buildId}"
+                app.push() 'latest'
+            }
         }
-        echo 'Reached deploy stage'
-        echo 'to-do: implement creating docker image and pushing to repo.'
     }
 }

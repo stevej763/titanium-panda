@@ -63,10 +63,16 @@ node {
         }
         if (BRANCH_NAME == main_branch) {
             echo("On branch ${main_branch}. No merge necessary.")
-
         }
     }
-    stage('Deploy') {
+    stage('Upload image') {
+        if (BRANCH_NAME == main_branch) {
+            withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+
+            }
+            echo("Building docker image")
+            sh 'docker build .'
+        }
         echo 'Reached deploy stage'
         echo 'to-do: implement creating docker image and pushing to repo.'
     }

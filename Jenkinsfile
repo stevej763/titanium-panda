@@ -68,7 +68,7 @@ node {
     stage('Upload image') {
         if (BRANCH_NAME == main_branch) {
             echo("Building docker image")
-            withDockerRegistry('https://registry.hub.docker.com', 'docker-hub') {
+            withDockerRegistry(url: 'https://registry.hub.docker.com', credentialsId: 'docker-hub') {
                 app = docker.build "stevej763/titanium:${buildId}"
                 app.push() 'latest'
             }

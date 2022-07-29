@@ -42,12 +42,7 @@ node {
         always {
             echo 'Testing ${branchName}....'
         }
-       if (currentBuild.result == null || currentBuild.result == 'SUCCESS') {
-           echo "Passed tests for build #${buildId} on branch: ${BRANCH_NAME}"
-        }
-        if (currentBuild.result == "FAILURE") {
-            echo "Failed tests on ${BRANCH_NAME}"
-        }
+
     }
     stage('Merge on pass') {
         if ((currentBuild.result == null || currentBuild.result == 'SUCCESS') && BRANCH_NAME != 'main') {
@@ -65,14 +60,19 @@ node {
             echo("On branch ${main_branch}. No merge necessary.")
         }
     }
-    stage('Upload image') {
+    stage('Build Image') {
+            local_image='titanium-panda:' + BUILD_ID
+            echo "${local_image}"
+            sh 'docker build -t titanium-panda:"${BUILD_ID}" .'
+         }
+
+    stage('Push image') {
         if (BRANCH_NAME == main_branch) {
-            echo("Building docker image")
-            sh('docker --version')
-            withDockerRegistry(url: 'https://registry.hub.docker.com', credentialsId: 'docker-hub') {
-                app = docker.build "stevej763/titanium:${buildId}"
-                app.push() 'latest'
-            }
+            withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh 'docker login -u "${USERNAME}" -p "${PASSWORD}"'
+                        sh 'docker tag titanium-panda:0.0."${BUILD_ID}" "${USERNAME}"/photo-portfolio:titanium-panda-"${BUILD_ID}"'
+                        sh 'docker push "${USERNAME}"/photo-portfolio:titanium-panda-"${BUILD_ID}"'
+                    }
         }
     }
 }

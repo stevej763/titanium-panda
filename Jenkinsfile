@@ -20,7 +20,7 @@ node {
                 branches: [[name: branchName]],
                 extensions: [],
                 userRemoteConfigs: [
-                    [credentialsId: 'jenkins-ci',
+                    [credentialsId: 'jenkins-github',
                     url: 'https://github.com/stevej763/titanium-panda.git']
                 ]
             ])

@@ -26,7 +26,7 @@ services:
       MINIO_ROOT_USER: "admin"
       MINIO_ROOT_PASSWORD: "Passw0rd"
     command: server --address ":9000" --console-address ":9100" /data
-  minio-console:
+  bucket-creation:
     links:
       - "s3:panda-docker-s3"
     image: minio/mc

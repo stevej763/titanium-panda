@@ -36,16 +36,17 @@ node {
     }
 
     stage('Maven Test') {
+        echo "Testing ${branchName}...."
         withEnv(["PATH+MAVEN=${tool 'Maven'}/bin"]) {
                     sh 'mvn test -Dspring.profiles.active=jenkins'
                 }
-        echo 'Testing ${branchName}....'
+
 
     }
     stage('Merge on pass') {
         if ((currentBuild.result == null || currentBuild.result == 'SUCCESS') && BRANCH_NAME != 'main') {
 
-            withCredentials([usernamePassword(credentialsId: 'jenkins-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            withCredentials([usernamePassword(credentialsId: 'jenkins-github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                 sh('git config --global user.email "${GIT_USERNAME}@ci.com"')
                 sh('git config --global user.name "${GIT_USERNAME}"')
                 sh('git fetch https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stevej763/titanium-panda.git')

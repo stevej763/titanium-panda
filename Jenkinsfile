@@ -36,12 +36,10 @@ node {
     }
 
     stage('Maven Test') {
-        mongoContainer = sh 'docker run -d -p 27017:27017 mongo:latest'
         withEnv(["PATH+MAVEN=${tool 'Maven'}/bin"]) {
                     sh 'mvn test -Dspring.profiles.active=jenkins'
                 }
         echo 'Testing ${branchName}....'
-        sh 'docker stop${mongoContainer}'
 
     }
     stage('Merge on pass') {

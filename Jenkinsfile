@@ -36,7 +36,7 @@ node {
     }
 
     stage('Maven Test') {
-        mongoContainer = sh 'docker run -d mongodb:latest'
+        mongoContainer = sh 'docker run -d mongo:latest'
         withEnv(["PATH+MAVEN=${tool 'Maven'}/bin"]) {
                     sh 'mvn test -Dspring.profiles.active=jenkins'
                 }

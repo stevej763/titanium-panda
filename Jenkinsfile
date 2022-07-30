@@ -62,7 +62,7 @@ node {
     stage('Build Image') {
             local_image='titanium-panda:' + BUILD_ID
             echo "${local_image}"
-            sh 'docker build -t titanium-panda:"${BUILD_ID}" .'
+            sh 'docker buildx build -t titanium-panda:"${BUILD_ID}" --platform=linux/amd64 .'
          }
 
     stage('Push image') {

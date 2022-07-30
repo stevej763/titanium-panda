@@ -69,7 +69,7 @@ node {
         if (BRANCH_NAME == main_branch) {
             withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh 'docker login -u "${USERNAME}" -p "${PASSWORD}"'
-                        sh 'docker tag titanium-panda:0.0."${BUILD_ID}" "${USERNAME}"/photo-api:titanium-panda-"${BUILD_ID}"'
+                        sh 'docker tag titanium-panda:"${BUILD_ID}" "${USERNAME}"/photo-api:titanium-panda-"${BUILD_ID}"'
                         sh 'docker push "${USERNAME}"/photo-api:titanium-panda-"${BUILD_ID}"'
                     }
         }

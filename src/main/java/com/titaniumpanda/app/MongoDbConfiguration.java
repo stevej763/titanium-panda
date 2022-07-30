@@ -21,7 +21,7 @@ public class MongoDbConfiguration {
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient(), environment.getProperty("mongodb.database"));
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient(), environment.getProperty("spring.data.mongodb.database"));
         mongoTemplate.indexOps("category").ensureIndex(new Index().on("categoryTitle", Sort.Direction.ASC));
         return mongoTemplate;
     }

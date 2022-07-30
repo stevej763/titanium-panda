@@ -3,7 +3,10 @@ services:
     image: titanium_panda:dev
     build: .
     ports:
-      - "3000:8080"
+      - "3000:3000"
+    environment:
+      AWS_ACCESS_KEY: ${ACCESS_KEY}
+      AWS_SECRET_KEY: ${SECRET_KEY}
     links:
       - "mongo:panda-docker-mongo"
       - "s3:panda-docker-s3"
